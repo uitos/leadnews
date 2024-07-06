@@ -1,6 +1,6 @@
 package com.heima.minio.test;
 
-import com.heima.file.service.impl.MinIOFileStorageService;
+import com.heima.file.service.FileStorageService;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class MinioTest {
 
 
     @Autowired
-    private MinIOFileStorageService minIOFileStorageService;
+    private FileStorageService fileStorageService;
 
     /**
      *
@@ -51,7 +51,7 @@ public class MinioTest {
      */
     @Test
     public void starterFileUploadTest() throws Exception {
-        String url = minIOFileStorageService.uploadHtmlFile("", "mylist.html", new FileInputStream("D:\\list.html"));
+        String url = fileStorageService.uploadHtmlFile("", "mylist.html", new FileInputStream("D:\\list.html"));
         System.out.println(url);
     }
 
