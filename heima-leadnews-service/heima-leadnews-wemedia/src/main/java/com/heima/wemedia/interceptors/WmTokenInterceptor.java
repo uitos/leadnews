@@ -3,6 +3,7 @@ package com.heima.wemedia.interceptors;
 import com.heima.wemedia.utils.WmThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,12 @@ public class WmTokenInterceptor implements HandlerInterceptor {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
+            return true;
         }
-        return true;
+        //没有用户ID，就直接拦截
+        response.setContentType("application/json");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return false;
     }
 
     /**

@@ -18,6 +18,11 @@ public enum AppHttpCodeEnum {
     // SIGN验签 100~120
     SIGN_INVALID(100,"无效的SIGN"),
     SIG_TIMEOUT(101,"SIGN已过期"),
+    // 增删改失败
+    INSERT_FAIL(110,"增加失败"),
+    UPDATE_FAIL(111,"更新失败"),
+    DELETE_FAIL(112,"删除失败"),
+
     // 参数错误 500~1000
     PARAM_REQUIRE(500,"缺少参数"),
     PARAM_INVALID(501,"无效参数"),
@@ -28,6 +33,9 @@ public enum AppHttpCodeEnum {
     AP_USER_DATA_NOT_EXIST(1001,"ApUser数据不存在"),
     DATA_NOT_EXIST(1002,"数据不存在"),
     FILE_UPLOAD_ERROR(1003,"文件上传错误"),
+    WM_MATERIAL_DATA_NOT_EXIST(1004,"素材不存在"),
+    NEWS_PUBLISHED_FAILED(1005,"文章发布失败"),
+
 
     // 数据错误 3000~3500
     NO_OPERATOR_AUTH(3000,"无权限操作"),
