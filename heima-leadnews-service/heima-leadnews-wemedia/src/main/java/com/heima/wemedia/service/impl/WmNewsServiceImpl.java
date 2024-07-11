@@ -19,6 +19,7 @@ import com.heima.model.wemedia.pojos.WmNewsMaterial;
 import com.heima.wemedia.mapper.WmMaterialMapper;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
+import com.heima.wemedia.service.WmNewsAutoAuditService;
 import com.heima.wemedia.service.WmNewsService;
 import com.heima.wemedia.utils.WmThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,8 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
     private WmNewsMaterialMapper wmNewsMaterialMapper;
     @Autowired
     private WmMaterialMapper wmMaterialMapper;
+    @Autowired
+    private WmNewsAutoAuditService wmNewsAutoAuditService;
 
     @Override
     public ResponseResult findPage(WmNewsPageReqDto dto) {
@@ -81,6 +84,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseResult submit(WmNewsDto dto) {
+        log.warn("文章发布当前线程:{}", Thread.currentThread().getName());
         // 一.校验参数
         if(dto == null) {
             throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
@@ -108,6 +112,9 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         //保存文章封面图片与素材的关联关系
         List<String> coverImageUrls = dto.getImages();
         saveRelations(coverImageUrls, wmNews.getId(), WemediaConstants.WM_COVER_REFERENCE);
+
+        //文章发布成功后，文章自动审核
+        wmNewsAutoAuditService.autoAuditWmNews(wmNews.getId());
         // 三.封装数据
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }

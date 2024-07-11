@@ -35,6 +35,16 @@ public enum AppHttpCodeEnum {
     FILE_UPLOAD_ERROR(1003,"文件上传错误"),
     WM_MATERIAL_DATA_NOT_EXIST(1004,"素材不存在"),
     NEWS_PUBLISHED_FAILED(1005,"文章发布失败"),
+    AP_ARTICLE_INSERT_FAIL(1006,"APP端文章增加失败"),
+    AP_ARTICLE_CONFIG_INSERT_FAIL(1007,"APP端文章配置增加失败"),
+    AP_ARTICLE_CONTENT_INSERT_FAIL(1008,"APP端文章内容增加失败"),
+    AP_ARTICLE_UPDATE_FAIL(1009,"APP端文章更新失败"),
+    AP_ARTICLE_CONTENT_UPDATE_FAIL(1010,"APP端文章内容更新失败"),
+    WM_NEWS_DATA_NOT_EXIST(1011,"自媒体端文章不存在"),
+    WM_NEWS_STATUS_NOT_SUBMIT(1012,"自媒体端文章状态不是待审核"),
+    TEXT_AUDIT_EX(1013,"文本审核异常"),
+    IMAGE_AUDIT_EX(1013,"图片审核异常"),
+
 
 
     // 数据错误 3000~3500

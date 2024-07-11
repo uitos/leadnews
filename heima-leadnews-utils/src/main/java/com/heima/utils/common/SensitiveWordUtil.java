@@ -1,10 +1,12 @@
 package com.heima.utils.common;
-
-
 import java.util.*;
 
+/**
+ * 敏感词操作工具类
+ */
 public class SensitiveWordUtil {
 
+    //敏感词列表构建的一个Map
     public static Map<String, Object> dictionaryMap = new HashMap<>();
 
 
@@ -86,7 +88,7 @@ public class SensitiveWordUtil {
     }
 
     /**
-     * 获取匹配的关键词和命中次数
+     * 获取匹配的敏感词和命中次数
      * @param text
      * @return
      */
@@ -118,6 +120,8 @@ public class SensitiveWordUtil {
         initMap(list);
         String content="我是一个好人，并不会卖冰毒，也不操练法轮功,我真的不卖冰毒";
         Map<String, Integer> map = matchWords(content);
+        //{ "冰毒":2, "法轮功":1 }
         System.out.println(map);
     }
+
 }
