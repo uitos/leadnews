@@ -1,0 +1,12 @@
+server:
+  port: 8884
+spring:
+  application:
+    name: rabbitmq-demo
+
+  rabbitmq:
+    host: 192.168.200.130
+    port: 5672
+    virtual-host: /
+    username: itcast
+    password: 123456

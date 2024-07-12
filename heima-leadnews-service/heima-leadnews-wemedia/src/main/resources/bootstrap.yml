@@ -10,7 +10,12 @@ spring:
       config:
         server-addr: 192.168.200.130:8848
         file-extension: yml
-
+  rabbitmq:
+    host: 192.168.200.130
+    port: 5672
+    virtual-host: /
+    username: itcast
+    password: 123456
 seata:
   registry: # TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址
     type: nacos # 注册中心类型 nacos
@@ -29,3 +34,4 @@ seata:
 tess4j:
   data-path: D:\166\project2\tessdata
   language: chi_sim
+

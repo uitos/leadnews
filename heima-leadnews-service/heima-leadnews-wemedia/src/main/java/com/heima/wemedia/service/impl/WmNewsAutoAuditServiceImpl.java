@@ -26,6 +26,10 @@ import com.heima.wemedia.service.WmNewsAutoAuditService;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RedissonClient;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -34,6 +38,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +73,10 @@ public class WmNewsAutoAuditServiceImpl implements WmNewsAutoAuditService {
     private IArticleClient articleClient;
     @Autowired
     private Tess4jClient tess4jClient;
+    @Autowired
+    private RedissonClient redissonClient;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     //@Transactional(rollbackFor = Exception.class)
@@ -128,6 +137,20 @@ public class WmNewsAutoAuditServiceImpl implements WmNewsAutoAuditService {
         } else {
             // 6.没到，修改wm_news表数据  状态：审核通过    理由：审核通过
             updateWmNews(wmNews, WmNews.Status.SUCCESS.getCode(), "审核通过");
+           /* //使用Redisson实现延迟队列
+            //向延迟队列中增加一个任务
+            RBlockingDeque<Integer> blockingDeque = redissonClient.getBlockingDeque("article-deque");
+            RDelayedQueue<Integer> delayedQueue = redissonClient.getDelayedQueue(blockingDeque);
+            long time = wmNews.getPublishTime().getTime() - System.currentTimeMillis();
+            delayedQueue.offer(wmNews.getId(), time, TimeUnit.MILLISECONDS);
+            */
+            //使用RabbitMQ的死信队列+TTL实现延迟发布文章
+            long time = wmNews.getPublishTime().getTime() - System.currentTimeMillis();
+            Message message = MessageBuilder
+                    .withBody(wmNews.getId().toString().getBytes(StandardCharsets.UTF_8))
+                    .setExpiration(time + "")
+                    .build();
+            amqpTemplate.convertAndSend("article.publish.direct.exchange", "article.delay", message);
         }
     }
 
@@ -156,7 +179,8 @@ public class WmNewsAutoAuditServiceImpl implements WmNewsAutoAuditService {
      * @param wmNews
      * @return
      */
-    private Long saveApArticle(WmNews wmNews) {
+    @Override
+    public Long saveApArticle(WmNews wmNews) {
         //1.补全实体
         ArticleDto dto = new ArticleDto();
         BeanUtils.copyProperties(wmNews, dto, "id");
@@ -188,6 +212,9 @@ public class WmNewsAutoAuditServiceImpl implements WmNewsAutoAuditService {
         try {
             //去重
             images = images.stream().distinct().collect(Collectors.toList());
+            if(images == null || images.size() == 0){
+                return flag;
+            }
             List<byte[]> imageBytes = new ArrayList<>(images.size());
             for (String url : images) {
                 byte[] bytes = fileStorageService.downLoadFile(url);
@@ -285,8 +312,10 @@ public class WmNewsAutoAuditServiceImpl implements WmNewsAutoAuditService {
         //其他文本
         text.append(wmNews.getTitle()).append(" - ").append(wmNews.getLabels());
         //封面图片
-        String[] coverImageArray = wmNews.getImages().split(",");
-        images.addAll(Arrays.asList(coverImageArray));
+        if(StringUtils.isNotBlank(wmNews.getImages())){
+            String[] coverImageArray = wmNews.getImages().split(",");
+            images.addAll(Arrays.asList(coverImageArray));
+        }
         ContentImagesDto dto = new ContentImagesDto();
         dto.setImages(images);
         dto.setContent(text.toString());
