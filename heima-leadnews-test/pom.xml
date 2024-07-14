@@ -17,6 +17,8 @@
         <module>tess4j-demo</module>
         <module>redisson-demo</module>
         <module>rabbitmq-demo</module>
+        <module>kafka-demo</module>
+        <module>es-init</module>
     </modules>
 
     <properties>

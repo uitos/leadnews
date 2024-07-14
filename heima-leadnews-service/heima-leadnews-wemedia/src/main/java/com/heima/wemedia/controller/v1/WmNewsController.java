@@ -2,6 +2,7 @@ package com.heima.wemedia.controller.v1;
 
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.dtos.WmNewsDto;
+import com.heima.model.wemedia.dtos.WmNewsEnableDto;
 import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.wemedia.service.WmNewsService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,23 @@ public class WmNewsController {
     @Autowired
     private WmNewsService wmNewsService;
 
+    /**
+     * 上下架
+     * @param dto
+     * @return
+     */
+    @PostMapping("/down_or_up")
+    public ResponseResult downOrUp(@RequestBody WmNewsEnableDto dto){
+        log.warn("dto:{}", dto);
+        return wmNewsService.downOrUp(dto);
+    }
+
+
+    /**
+     * 编辑回显
+     * @param id
+     * @return
+     */
     @GetMapping("/one/{id}")
     public ResponseResult one(@PathVariable("id") Integer id){
         log.warn("id:{}", id);

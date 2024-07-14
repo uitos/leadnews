@@ -43,7 +43,8 @@ public enum AppHttpCodeEnum {
     WM_NEWS_DATA_NOT_EXIST(1011,"自媒体端文章不存在"),
     WM_NEWS_STATUS_NOT_SUBMIT(1012,"自媒体端文章状态不是待审核"),
     TEXT_AUDIT_EX(1013,"文本审核异常"),
-    IMAGE_AUDIT_EX(1013,"图片审核异常"),
+    IMAGE_AUDIT_EX(1014,"图片审核异常"),
+    WM_NEWS_STATUS_NOT_PUBLISH(1015,"自媒体端文章状态不是发布状态"),
 
 
 
