@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.search.dtos.UserSearchDto;
 import com.heima.model.search.vos.SearchArticleVo;
+import com.heima.search.service.ApUserSearchService;
 import com.heima.search.service.ArticleSearchService;
+import com.heima.search.utils.AppThreadLocalUtil;
 import io.jsonwebtoken.lang.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +37,8 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
 
     @Autowired
     private RestHighLevelClient client;
+    @Autowired
+    private ApUserSearchService apUserSearchService;
 
     @Override
     public ResponseResult search(UserSearchDto dto) throws Exception {
@@ -42,6 +46,14 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
             return ResponseResult.okResult(new ArrayList<SearchArticleVo>());
         }
         int start = dto.getFromIndex();
+
+        //异步保存用户搜索记录
+        Integer appUserId = AppThreadLocalUtil.getAppUserId();
+        //用户登录后，且第一次搜索新关键词才需要保存搜索记录
+        if(appUserId != null && start == 0){
+            apUserSearchService.save(dto.getSearchWords(), appUserId);
+        }
+
         SearchRequest request = new SearchRequest("app_info_article");
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
         //搜索框匹配

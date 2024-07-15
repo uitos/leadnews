@@ -21,4 +21,11 @@ public interface ArticleConstants {
      */
     String DEFAULT_TAG = "__all__";
 
+    String ARTICLE_ES_SYNC_TOPIC = "article.es.sync.topic";
+
+    Integer HOT_ARTICLE_LIKE_WEIGHT = 3;
+    Integer HOT_ARTICLE_COMMENT_WEIGHT = 5;
+    Integer HOT_ARTICLE_COLLECTION_WEIGHT = 8;
+    String HOT_ARTICLE_FIRST_PAGE = "hot_article_first_page_";
+
 }

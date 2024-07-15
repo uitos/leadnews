@@ -3,12 +3,17 @@ package com.heima.article.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.article.service.ApArticleDetailGenerateService;
+import com.heima.common.constants.ArticleConstants;
 import com.heima.file.service.FileStorageService;
 import com.heima.model.article.pojos.ApArticle;
+import com.heima.model.search.vos.SearchArticleVo;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +39,8 @@ public class ApArticleDetailGenerateServiceImpl implements ApArticleDetailGenera
     private Configuration configuration;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
 
     @Override
@@ -56,5 +63,17 @@ public class ApArticleDetailGenerateServiceImpl implements ApArticleDetailGenera
         //4、更新ApArticle的staticUrl字段
         apArticle.setStaticUrl(path);
         apArticleMapper.updateById(apArticle);
+
+        try {
+            //发送消息到Kafka
+            //组装数据
+            SearchArticleVo vo = new SearchArticleVo();
+            BeanUtils.copyProperties(apArticle, vo);
+            vo.setContent(content);
+            kafkaTemplate.send(ArticleConstants.ARTICLE_ES_SYNC_TOPIC, JSON.toJSONString(vo));
+        } catch (BeansException e) {
+            e.printStackTrace();
+        }
+
     }
 }
