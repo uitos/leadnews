@@ -97,4 +97,17 @@
         LIMIT #{dto.size}
     </select>
 
+    <select id="findListBeforeDate" resultMap="ArticleResultMap">
+        SELECT
+            aa.id aa_id,
+        <include refid="Base_Column_List_NO_ID"></include>
+        FROM
+            ap_article aa, ap_article_config aac
+        where
+            aa.id = aac.article_id
+            AND aac.is_down != 1
+            AND aac.is_delete != 1
+            AND aa.publish_time > #{day}
+    </select>
+
 </mapper>

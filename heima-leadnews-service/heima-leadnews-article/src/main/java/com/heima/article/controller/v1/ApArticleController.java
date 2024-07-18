@@ -32,24 +32,29 @@ public class ApArticleController {
     @PostMapping("/load")
     public ResponseResult load(@RequestBody ArticleHomeDto dto){
         log.warn("dto:{}", dto);
-        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_NEW);
+        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_NEW, true);
     }
 
     /**
-     * 加载最新
+     * 加载最新  上拉
      * @param dto
      * @return
      */
     @PostMapping("/loadnew")
     public ResponseResult loadnew(@RequestBody ArticleHomeDto dto){
         log.warn("dto:{}", dto);
-        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_NEW);
+        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_NEW, false);
     }
 
+    /**
+     * 加载更多  下垃
+     * @param dto
+     * @return
+     */
     @PostMapping("/loadmore")
     public ResponseResult loadmore(@RequestBody ArticleHomeDto dto){
         log.warn("dto:{}", dto);
-        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_MORE);
+        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_MORE, false);
     }
 
 }

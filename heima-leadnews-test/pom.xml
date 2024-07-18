@@ -20,6 +20,7 @@
         <module>kafka-demo</module>
         <module>es-init</module>
         <module>mongo-demo</module>
+        <module>spring-task-demo</module>
     </modules>
 
     <properties>

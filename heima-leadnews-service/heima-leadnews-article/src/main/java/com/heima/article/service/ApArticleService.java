@@ -20,9 +20,10 @@ public interface ApArticleService extends IService<ApArticle> {
      * 加载首页
      * @param dto
      * @param type 加载方式  1：更多  2：更新
+     * @param isFirstPage 是否首页
      * @return
      */
-    ResponseResult load(ArticleHomeDto dto, Short type);
+    ResponseResult load(ArticleHomeDto dto, Short type, Boolean isFirstPage);
 
     /**
      * 保存或修改文章
@@ -30,4 +31,10 @@ public interface ApArticleService extends IService<ApArticle> {
      * @return
      */
     ResponseResult saveApArticle(ArticleDto dto);
+
+    /**
+     * 计算热点文章
+     */
+    void computeHotArticle();
+
 }

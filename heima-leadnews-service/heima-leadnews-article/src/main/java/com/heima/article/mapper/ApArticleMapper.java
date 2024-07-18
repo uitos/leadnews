@@ -6,6 +6,7 @@ import com.heima.model.article.pojos.ApArticle;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,4 +26,6 @@ public interface ApArticleMapper extends BaseMapper<ApArticle> {
      * @return
      */
     List<ApArticle> selectList(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
+
+    List<ApArticle> findListBeforeDate(@Param("day") Date day);
 }

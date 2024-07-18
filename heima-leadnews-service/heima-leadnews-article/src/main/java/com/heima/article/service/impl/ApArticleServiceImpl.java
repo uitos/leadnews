@@ -1,12 +1,15 @@
 package com.heima.article.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.heima.apis.wemedia.IWemediaClient;
 import com.heima.article.mapper.ApArticleConfigMapper;
 import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.article.service.ApArticleDetailGenerateService;
 import com.heima.article.service.ApArticleService;
+import com.heima.common.cache.CacheService;
 import com.heima.common.constants.ArticleConstants;
 import com.heima.common.exception.CustomException;
 import com.heima.model.article.dtos.ArticleDto;
@@ -15,17 +18,22 @@ import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleConfig;
 import com.heima.model.article.pojos.ApArticleContent;
 import com.heima.model.article.vos.ApArticleVo;
+import com.heima.model.article.vos.HotArticleVo;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.wemedia.pojos.WmChannel;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -46,9 +54,27 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
     private ApArticleContentMapper apArticleContentMapper;
     @Autowired
     private ApArticleDetailGenerateService apArticleDetailGenerateService;
+    @Autowired
+    private IWemediaClient wemediaClient;
+    @Autowired
+    private CacheService cacheService;
+
+    /**
+     * 从缓存中获取各频道首页数据
+     * @param dto
+     * @return
+     */
+    private ResponseResult loadFormRedis(String channel) {
+        //从缓存中拿
+        String json = cacheService.get(ArticleConstants.HOT_ARTICLE_FIRST_PAGE + channel);
+        List<HotArticleVo> hotArticleVos = JSON.parseArray(json, HotArticleVo.class);
+        log.warn("redis 从缓冲中获取数据");
+        return ResponseResult.okResult(hotArticleVos);
+    }
 
     @Override
-    public ResponseResult load(ArticleHomeDto dto, Short type) {
+    public ResponseResult load(ArticleHomeDto dto, Short type, Boolean isFirstPage) {
+        //没有
         // 一.校验参数
         if(dto == null) {
             throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
@@ -68,9 +94,15 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         if(!ArticleConstants.LOADTYPE_LOAD_MORE.equals(type) && !ArticleConstants.LOADTYPE_LOAD_NEW.equals(type)) {
             type = ArticleConstants.LOADTYPE_LOAD_NEW;
         }
+
+        if(isFirstPage) {
+            return loadFormRedis(dto.getTag());
+        }
+
         // 二.处理业务
         // 查询条件 频道、状态：已发布【配置表中不下架、不删除】、降序：发布时间
         // 两表连查
+        log.warn("db 从数据库中获取数据");
         List<ApArticle> list = apArticleMapper.selectList(dto, type);
         List<ApArticleVo> voList = new ArrayList<>(list.size());
         for (ApArticle apArticle : list) {
@@ -148,5 +180,83 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         // 返回APP端文章的ID
         return ResponseResult.okResult(apArticle.getId());
     }
+
+    @Override
+    public void computeHotArticle() {
+        //1、查询指定时间的文章
+        //todo 5天前没有很多数据，所以现在写5年前，实际上线应该是5天前
+        Date day = DateTime.now().minusYears(5).toDate();
+        List<ApArticle> articleList = apArticleMapper.findListBeforeDate(day);
+        //2、计算分值
+        List<HotArticleVo> voList = computeHotArticleVo(articleList);
+        //3、排序并放入缓存
+        sortAndCacheToRedis(voList);
+    }
+
+    private void sortAndCacheToRedis(List<HotArticleVo> voList) {
+        ResponseResult<List<WmChannel>> responseResult = wemediaClient.channels();
+        if(responseResult.getCode().equals(200)) {
+            List<WmChannel> channels = responseResult.getData();
+            //1、得到每个频道下的文章
+            for (WmChannel channel : channels) {
+                //当前频道
+                List<HotArticleVo> channelVoList = voList.stream().filter(v -> v.getChannelId().equals(channel.getId())).collect(Collectors.toList());
+                //2、按score给文章排序
+                //3、取前30条放到Redis中
+                sortAndCache(channelVoList, ArticleConstants.HOT_ARTICLE_FIRST_PAGE + channel.getId());
+            }
+        }
+        //所有的数据也需要取前30条放到Redis
+        sortAndCache(voList, ArticleConstants.HOT_ARTICLE_FIRST_PAGE + ArticleConstants.DEFAULT_TAG);
+    }
+
+    /**
+     * 为热点文章数据排序，放入缓存
+     * @param voList
+     * @param redisKey
+     */
+    private void sortAndCache(List<HotArticleVo> voList, String redisKey) {
+        List<HotArticleVo> data = voList.stream()
+                //根据score倒序
+                .sorted(Comparator.comparing(HotArticleVo::getScore).reversed())
+                //取前30条
+                .limit(30)
+                .collect(Collectors.toList());
+        cacheService.set(redisKey, JSON.toJSONString(data));
+    }
+
+    private List<HotArticleVo> computeHotArticleVo(List<ApArticle> articleList) {
+        List<HotArticleVo> voList = new ArrayList<>();
+        for (ApArticle article : articleList) {
+            HotArticleVo vo = new HotArticleVo();
+            BeanUtils.copyProperties(article, vo);
+            Integer score = computeScore(vo);
+            vo.setScore(score);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+    private Integer computeScore(HotArticleVo vo) {
+        int score = 0;
+        Integer views = vo.getViews();
+        Integer likes = vo.getLikes();
+        Integer comment = vo.getComment();
+        Integer collection = vo.getCollection();
+        if(views != null && views > 0) {
+            score += views;
+        }
+        if(likes != null && likes > 0){
+            score += likes * ArticleConstants.HOT_ARTICLE_LIKE_WEIGHT;
+        }
+        if(comment != null && comment > 0){
+            score += comment * ArticleConstants.HOT_ARTICLE_COMMENT_WEIGHT;
+        }
+        if(collection != null && collection > 0){
+            score += collection * ArticleConstants.HOT_ARTICLE_COLLECTION_WEIGHT;
+        }
+        return score;
+    }
+
 
 }
