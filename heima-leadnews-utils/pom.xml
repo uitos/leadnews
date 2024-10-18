@@ -17,6 +17,8 @@
             <groupId>com.heima</groupId>
             <artifactId>heima-leadnews-model</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
