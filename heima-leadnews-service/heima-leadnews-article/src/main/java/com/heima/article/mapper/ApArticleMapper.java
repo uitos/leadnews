@@ -25,4 +25,14 @@ public interface ApArticleMapper extends BaseMapper<ApArticle> {
      * @return
      */
     List<ApArticle> selectList(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
+
+    /**
+     * 加载文章列表
+     * @param dto 封装参数
+     * @return 文
+     */
+    List<ApArticle> load(@Param("dto") ArticleHomeDto dto);
+
+
+
 }

@@ -5,54 +5,54 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.heima.model.article.pojos.ApArticle">
         <!-- id:表示映射主键， column:结果集列名  property：column的值对应的Java实体的属性名-->
-        <id column="id" property="id" />
+        <id column="id" property="id"/>
         <!-- result:表示映射普通列， column:结果集列名  property：column的值对应的Java实体的属性名-->
-        <result column="title" property="title" />
-        <result column="author_id" property="authorId" />
-        <result column="author_name" property="authorName" />
-        <result column="channel_id" property="channelId" />
-        <result column="channel_name" property="channelName" />
-        <result column="layout" property="layout" />
-        <result column="flag" property="flag" />
-        <result column="images" property="images" />
-        <result column="labels" property="labels" />
-        <result column="likes" property="likes" />
-        <result column="collection" property="collection" />
-        <result column="comment" property="comment" />
-        <result column="views" property="views" />
-        <result column="province_id" property="provinceId" />
-        <result column="city_id" property="cityId" />
-        <result column="county_id" property="countyId" />
-        <result column="created_time" property="createdTime" />
-        <result column="publish_time" property="publishTime" />
-        <result column="sync_status" property="syncStatus" />
-        <result column="origin" property="origin" />
-        <result column="static_url" property="staticUrl" />
+        <result column="title" property="title"/>
+        <result column="author_id" property="authorId"/>
+        <result column="author_name" property="authorName"/>
+        <result column="channel_id" property="channelId"/>
+        <result column="channel_name" property="channelName"/>
+        <result column="layout" property="layout"/>
+        <result column="flag" property="flag"/>
+        <result column="images" property="images"/>
+        <result column="labels" property="labels"/>
+        <result column="likes" property="likes"/>
+        <result column="collection" property="collection"/>
+        <result column="comment" property="comment"/>
+        <result column="views" property="views"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="city_id" property="cityId"/>
+        <result column="county_id" property="countyId"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="sync_status" property="syncStatus"/>
+        <result column="origin" property="origin"/>
+        <result column="static_url" property="staticUrl"/>
     </resultMap>
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapNoId" type="com.heima.model.article.pojos.ApArticle">
-        <result column="title" property="title" />
-        <result column="author_id" property="authorId" />
-        <result column="author_name" property="authorName" />
-        <result column="channel_id" property="channelId" />
-        <result column="channel_name" property="channelName" />
-        <result column="layout" property="layout" />
-        <result column="flag" property="flag" />
-        <result column="images" property="images" />
-        <result column="labels" property="labels" />
-        <result column="likes" property="likes" />
-        <result column="collection" property="collection" />
-        <result column="comment" property="comment" />
-        <result column="views" property="views" />
-        <result column="province_id" property="provinceId" />
-        <result column="city_id" property="cityId" />
-        <result column="county_id" property="countyId" />
-        <result column="created_time" property="createdTime" />
-        <result column="publish_time" property="publishTime" />
-        <result column="sync_status" property="syncStatus" />
-        <result column="origin" property="origin" />
-        <result column="static_url" property="staticUrl" />
+        <result column="title" property="title"/>
+        <result column="author_id" property="authorId"/>
+        <result column="author_name" property="authorName"/>
+        <result column="channel_id" property="channelId"/>
+        <result column="channel_name" property="channelName"/>
+        <result column="layout" property="layout"/>
+        <result column="flag" property="flag"/>
+        <result column="images" property="images"/>
+        <result column="labels" property="labels"/>
+        <result column="likes" property="likes"/>
+        <result column="collection" property="collection"/>
+        <result column="comment" property="comment"/>
+        <result column="views" property="views"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="city_id" property="cityId"/>
+        <result column="county_id" property="countyId"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="sync_status" property="syncStatus"/>
+        <result column="origin" property="origin"/>
+        <result column="static_url" property="staticUrl"/>
     </resultMap>
 
     <!-- resultMap : 自定义结果映射 -->
@@ -71,30 +71,66 @@
 
     <select id="selectList" resultMap="ArticleResultMap">
         SELECT
-            aa.id aa_id,
-            <include refid="Base_Column_List_NO_ID"></include>
+        aa.id aa_id,
+        <include refid="Base_Column_List_NO_ID"></include>
         FROM
-            ap_article aa, ap_article_config aac
+        ap_article aa, ap_article_config aac
         <where>
             aa.id = aac.article_id
-          <if test="dto.tag != '__all__'">
-              AND aa.channel_id = #{dto.tag}
-          </if>
-          <if test="type == 1">
-              <![CDATA[
+            <if test="dto.tag != '__all__'">
+                AND aa.channel_id = #{dto.tag}
+            </if>
+            <if test="type == 1">
+                <![CDATA[
                 AND aa.publish_time < #{dto.minBehotTime}
               ]]>
-          </if>
+            </if>
             <if test="type == 2">
                 <![CDATA[
                 AND aa.publish_time > #{dto.maxBehotTime}
               ]]>
             </if>
-          AND aac.is_down != 1
-          AND aac.is_delete != 1
+            AND aac.is_down != 1
+            AND aac.is_delete != 1
         </where>
         ORDER BY aa.publish_time DESC
         LIMIT #{dto.size}
     </select>
+    <select id="load" resultType="com.heima.model.article.pojos.ApArticle">
+            SELECT aa.id,
+                   aa.title,
+                   aa.author_id,
+                   aa.author_name,
+                   aa.channel_id,
+                   aa.channel_name,
+                   aa.layout,
+                   aa.flag,
+                   aa.images,
+                   aa.labels,
+                   aa.likes,
+                   aa.collection,
+                   aa.comment,
+                   aa.views,
+                   aa.province_id,
+                   aa.city_id,
+                   aa.county_id,
+                   aa.created_time,
+                   aa.publish_time,
+                   aa.sync_status,
+                   aa.origin,
+                   aa.static_url
+            FROM ap_article aa
+                     JOIN ap_article_config aac ON aa.id = aac.article_id
+            WHERE aac.is_delete = 0
+              AND aac.is_down = 0
+            <if test="dto.tag != '__all__'">
+                and aa.channel_id = #{dto.tag}
+            </if>
+            ORDER BY aa.publish_time DESC
+            Limit #{dto.size}
+
+
+    </select>
+
 
 </mapper>
