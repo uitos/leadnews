@@ -3,6 +3,7 @@ package com.heima.article.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.pojos.ApArticle;
+import com.heima.model.common.dtos.ResponseResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,10 +20,5 @@ import java.util.List;
 @Mapper
 public interface ApArticleMapper extends BaseMapper<ApArticle> {
 
-    /**
-     * 查询文章
-     * @param dto
-     * @return
-     */
-    List<ApArticle> selectList(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
+    List<ApArticle> selectListByArticleHomeDto(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
 }

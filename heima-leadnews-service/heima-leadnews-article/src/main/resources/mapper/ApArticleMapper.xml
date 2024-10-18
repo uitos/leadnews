@@ -69,32 +69,25 @@
         title, author_id, author_name, channel_id, channel_name, layout, flag, images, labels, likes, collection, comment, views, province_id, city_id, county_id, created_time, publish_time, sync_status, origin, static_url
     </sql>
 
-    <select id="selectList" resultMap="ArticleResultMap">
-        SELECT
-            aa.id aa_id,
-            <include refid="Base_Column_List_NO_ID"></include>
-        FROM
-            ap_article aa, ap_article_config aac
-        <where>
-            aa.id = aac.article_id
-          <if test="dto.tag != '__all__'">
-              AND aa.channel_id = #{dto.tag}
-          </if>
-          <if test="type == 1">
-              <![CDATA[
-                AND aa.publish_time < #{dto.minBehotTime}
-              ]]>
-          </if>
-            <if test="type == 2">
-                <![CDATA[
-                AND aa.publish_time > #{dto.maxBehotTime}
-              ]]>
-            </if>
-          AND aac.is_down != 1
-          AND aac.is_delete != 1
-        </where>
-        ORDER BY aa.publish_time DESC
-        LIMIT #{dto.size}
+    <select id="selectListByArticleHomeDto" resultType="com.heima.model.article.pojos.ApArticle">
+        select * from ap_article aa join ap_article_config aac on aa.id = aac.article_id
+        where aac.is_down = 0 and aac.is_delete = 0
+        <if test="dto.tag != '__all__'">
+            and channel_id = #{dto.tag}
+        </if>
+        <if test="type == 1">
+            <![CDATA[
+            and publish_time < #{dto.minBehotTime}
+            ]]>
+        </if>
+        <if test="type == 2">
+            <![CDATA[
+            and publish_time > #{dto.maxBehotTime}
+            ]]>
+        </if>
+        order by aa.publish_time desc
+        limit #{dto.size}
     </select>
+
 
 </mapper>
