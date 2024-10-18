@@ -59,6 +59,7 @@
 姓名：${stuMap.stu2.name}<br/>
 年龄：${stuMap.stu2.age}<br/>
 
+
 <br/>
 <a href="###">遍历map中两个学生信息：</a><br/>
 <table>
