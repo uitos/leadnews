@@ -1,5 +1,6 @@
 package com.heima.freemarker.controller;
 
+import com.heima.freemarker.pojo.Student;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +20,18 @@ public class FreemarkerController {
     }
 
     @GetMapping("/list")
-    public String list(Model model){
+    public String list(Model model) {
 
         return "list";
     }
 
     @GetMapping("/basic")
-    public String basic(Model model){
-
+    public String basic(Model model) {
+        model.addAttribute("name", "张三");
+        Student student = new Student();
+        student.setName("李四");
+        student.setAge(18);
+        model.addAttribute("stu", student);
         return "basic";
     }
 

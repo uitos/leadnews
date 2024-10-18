@@ -69,6 +69,11 @@
         <xxl.job.version>2.2.0-SNAPSHOT</xxl.job.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.18.0</version>
+        </dependency>
         <!--日志处理包-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
