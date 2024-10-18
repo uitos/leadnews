@@ -32,14 +32,14 @@
                 <td>${stu.age}</td>
                 <td>${stu.money}</td>
             </tr>
-            <#else>
-                <tr>
-                    <#-- stu_index ：元素_index，获取元素对应的下标 -->
-                    <td>${stu_index+1}</td>
-                    <td>${stu.name}</td>
-                    <td>${stu.age}</td>
-                    <td>${stu.money}</td>
-                </tr>
+        <#else>
+            <tr>
+                <#-- stu_index ：元素_index，获取元素对应的下标 -->
+                <td>${stu_index+1}</td>
+                <td>${stu.name}</td>
+                <td>${stu.age}</td>
+                <td>${stu.money}</td>
+            </tr>
         </#if>
     </#list>
 
@@ -82,24 +82,47 @@
     </#list>
 </table>
 <hr>
-    <#if (date1?date >= date2?date)>
-        条件成立
-    </#if>
+
+<#if (date2?date >= date1?date)>
+    条件成立
+</#if>
+<#--    <#if (date1?date >= date2?date)>-->
+<#--        条件成立-->
+<#--    </#if>-->
 
 <hr>
 
 <#if date1??>
     date1存在
 </#if>
-
+<hr>
 <#if date3??>
 <#else>
     date3不存在
 </#if>
+<hr>
+${name ! ''}
+<br>
+${name2 ! 'name2默认值'}
 
-<hr/>
-${name ! ''}  <br>
-${name2 ! 'name2不存在，给一个默认值'}
+<#if (age>20)>
+    age>20
+</#if>
+
+
+
+<#--<#if date1??>-->
+<#--    date1存在-->
+<#--</#if>-->
+
+<#--<#if date3??>-->
+<#--<#else>-->
+<#--    date3不存在-->
+<#--</#if>-->
+
+<#--<hr/>-->
+<#--${name ! ''}  <br>-->
+<#--${name2 ! 'name2不存在，给一个默认值'}-->
 
 </body>
 </html>

@@ -8,13 +8,16 @@
 
 <b>获得集合大小</b><br>
 
+<#--集合大小：${stus?size}-->
 集合大小：${stus?size}
 <hr>
 
 
 <b>获得日期</b><br>
 
-显示年月日: ${today?date}       <br>
+显示年月日: ${today?date}
+<#--${today?date}       -->
+<br>
 
 显示时分秒：${today?time}<br>
 

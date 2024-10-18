@@ -14,6 +14,7 @@
     <modules>
         <module>heima-leadnews-user</module>
         <module>heima-leadnews-article</module>
+        <module>heima-leadnews-wemedia</module>
     </modules>
 
     <properties>
@@ -39,6 +40,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>aspectjweaver</artifactId>
+                    <groupId>org.aspectj</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

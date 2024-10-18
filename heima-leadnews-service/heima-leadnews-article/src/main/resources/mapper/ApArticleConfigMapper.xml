@@ -11,7 +11,6 @@
         <result column="is_down" property="isDown" />
         <result column="is_delete" property="isDelete" />
     </resultMap>
-
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, article_id, is_comment, is_forward, is_down, is_delete

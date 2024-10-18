@@ -39,7 +39,6 @@ public class GeneratePageTest {
     private MinIOFileStorageService minIOFileStorageService;
 
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -51,7 +50,7 @@ public class GeneratePageTest {
                         .eq(ApArticleContent::getArticleId, articleId)
         );
         //2、通过Freemarker填充内容
-        if(apArticleContent == null || StringUtils.isBlank(apArticleContent.getContent())){
+        if (apArticleContent == null || StringUtils.isBlank(apArticleContent.getContent())) {
             return;
         }
         StringWriter out = new StringWriter();
@@ -59,7 +58,7 @@ public class GeneratePageTest {
         Map<String, Object> data = new HashMap<>();
         List<Map> maps = JSON.parseArray(apArticleContent.getContent(), Map.class);
         data.put("content", maps);
-        template.process(data,out);
+        template.process(data, out);
         //3、生成HTML，上传到Minio
         ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
         String path = minIOFileStorageService.uploadHtmlFile("", articleId + ".html", in);
@@ -70,5 +69,6 @@ public class GeneratePageTest {
         apArticle.setStaticUrl(path);
         apArticleMapper.updateById(apArticle);
     }
+
 
 }
