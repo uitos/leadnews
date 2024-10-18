@@ -3,9 +3,18 @@ package com.heima.article.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.article.service.ApArticleService;
+import com.heima.common.constants.ArticleConstants;
+import com.heima.common.exception.CustomException;
+import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.pojos.ApArticle;
+import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.common.enums.AppHttpCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -21,4 +30,30 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
     @Autowired
     private ApArticleMapper apArticleMapper;
 
+    @Override
+    public ResponseResult load(ArticleHomeDto dto,Short type) {
+        //参数校验
+        if(Objects.isNull(dto)){
+            throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        Integer size = dto.getSize();
+        String tag = dto.getTag();
+        Date maxBehotTime = dto.getMaxBehotTime();
+        Date minBehotTime = dto.getMinBehotTime();
+        if(Objects.isNull(size) || size <= 0 || size>30){
+            dto.setSize(10);
+        }
+        if(Objects.isNull(tag)){
+            dto.setTag(ArticleConstants.DEFAULT_TAG);
+        }
+        if(Objects.isNull(maxBehotTime)){
+            dto.setMaxBehotTime(new Date());
+        }
+        if(Objects.isNull(minBehotTime)){
+            dto.setMinBehotTime(new Date());
+        }
+        List<ApArticle> apArticles = apArticleMapper.selectListByArticleHomeDto(dto,type);
+
+        return ResponseResult.okResult(apArticles);
+    }
 }
