@@ -46,6 +46,10 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
             if(!password.equals(userDB.getPassword())) {
                 throw new CustomException(AppHttpCodeEnum.PHONE_OR_PASSWORD_ERROR);
             }
+            // 5.判断状态是否正常
+            if(!userDB.getStatus()) {
+                throw new CustomException(AppHttpCodeEnum.USER_STATUS_ERROR);
+            }
             //三、封装数据
             //成功
             data.put("token", AppJwtUtil.getToken(userDB.getId().longValue()));
