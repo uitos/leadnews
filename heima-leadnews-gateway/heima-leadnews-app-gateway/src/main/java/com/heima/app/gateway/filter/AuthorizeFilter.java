@@ -39,10 +39,10 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         }
         //释放跨域测试请求
-        if (path.contains("/ajax")) {
-            log.warn("是跨域测试请求，放行");
-            return chain.filter(exchange);
-        }
+//        if (path.contains("/ajax")) {
+//            log.warn("是跨域测试请求，放行");
+//            return chain.filter(exchange);
+//        }
 
         // 2.判断token是否有效
         boolean flag = true;
