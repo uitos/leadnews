@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class ArticleHomeDto {
-
+    private Short loaddir;
     // 最大时间
     private Date maxBehotTime;
     // 最小时间

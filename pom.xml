@@ -48,6 +48,7 @@
         <jwt.version>0.9.1</jwt.version>
         <fastjson.version>1.2.58</fastjson.version>
         <fastjson.dataformat.version>2.9.9</fastjson.dataformat.version>
+        <fastjson.dataformat.yaml.version>2.18.0</fastjson.dataformat.yaml.version>
         <spring.jwt.version>1.0.9.RELEASE</spring.jwt.version>
         <spring.boot.admin.version>2.1.6</spring.boot.admin.version>
         <spring.cloud.version>Hoxton.SR10</spring.cloud.version>
@@ -69,6 +70,7 @@
         <xxl.job.version>2.2.0-SNAPSHOT</xxl.job.version>
     </properties>
     <dependencies>
+
         <!--日志处理包-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -193,7 +195,8 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
-            </dependency><dependency>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-cbor</artifactId>
                 <version>${fastjson.dataformat.version}</version>
@@ -202,6 +205,11 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${fastjson.dataformat.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${fastjson.dataformat.yaml.version}</version>
             </dependency>
             <!-- spring colud -->
             <dependency>
