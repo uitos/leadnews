@@ -28,19 +28,14 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.warn("AppGateway AuthorizeFilter running -----");
+        //log.warn("AppGateway AuthorizeFilter running -----");
         // 1.放行登录请求
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         String path = request.getPath().toString();
-        log.warn("请求路径:{}", path);
+        //log.warn("请求路径:{}", path);
         if (path.contains(LOGIN_PATH)) {
-            log.warn("是登录请求，放行");
-            return chain.filter(exchange);
-        }
-        //释放跨域测试请求
-        if (path.contains("/ajax")) {
-            log.warn("是跨域测试请求，放行");
+            //log.warn("是登录请求，放行");
             return chain.filter(exchange);
         }
 
@@ -65,7 +60,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             if(claims != null) {
                 // 3.有效：放行
                 Object id = claims.get("id");
-                log.warn("token正确，用户ID:{}", id);
+                //log.warn("token正确，用户ID:{}", id);
                 exchange.mutate()
                     .request(builder -> builder.header("appUserId", id.toString()))
                     .build();

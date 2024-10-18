@@ -46,6 +46,10 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
             if(!password.equals(userDB.getPassword())) {
                 throw new CustomException(AppHttpCodeEnum.PHONE_OR_PASSWORD_ERROR);
             }
+            // 5.判断状态是否正常
+            if (!userDB.getStatus()) {
+                throw new CustomException(AppHttpCodeEnum.USER_STATUS_ERROR);
+            }
             //三、封装数据
             //成功
             data.put("token", AppJwtUtil.getToken(userDB.getId().longValue()));
@@ -53,10 +57,32 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
             userDB.setPassword("");
             userDB.setSalt("");
             data.put("user",userDB);
+            /*
+             * {
+             *    "host": "",
+             *    "code": 200,
+             *    "errorMessage": "操作成功",
+             *    "data": {
+             *        "token": "由userId生成一个token",
+             *        "user":{ 登录用户的信息(不包括密码和盐) }
+             *    }
+             * }
+             */
             return ResponseResult.okResult(data);
         }
+
         //三、封装数据
         //不登录，先看看
+        /*
+         * {
+         *    "host": "",
+         *    "code": 200,
+         *    "errorMessage": "操作成功",
+         *    "data": {
+         *        "token": "由0生成一个token"
+         *    }
+         * }
+         */
         data.put("token", AppJwtUtil.getToken(0L));
         return ResponseResult.okResult(data);
     }
