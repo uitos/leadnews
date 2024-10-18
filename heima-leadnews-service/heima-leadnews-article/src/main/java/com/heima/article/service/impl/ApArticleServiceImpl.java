@@ -95,9 +95,9 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
             type = ArticleConstants.LOADTYPE_LOAD_NEW;
         }
 
-        if(isFirstPage) {
+        /*if(isFirstPage) {
             return loadFormRedis(dto.getTag());
-        }
+        }*/
 
         // 二.处理业务
         // 查询条件 频道、状态：已发布【配置表中不下架、不删除】、降序：发布时间
