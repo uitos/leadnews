@@ -5,6 +5,7 @@ import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.pojos.ApArticle;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 
@@ -25,4 +26,12 @@ public interface ApArticleMapper extends BaseMapper<ApArticle> {
      * @return
      */
     List<ApArticle> selectList(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
+
+    /**
+     * 根据刷新种类查询文章
+     * @param dto
+     * @param type
+     * @return
+     */
+    List<ApArticle> selectListByArticleHomeDto(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
 }
