@@ -1,6 +1,8 @@
 package com.heima.model.article.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -15,4 +17,5 @@ public class ArticleHomeDto {
     private Integer size = 10;
     // 频道ID
     private String tag;
+
 }

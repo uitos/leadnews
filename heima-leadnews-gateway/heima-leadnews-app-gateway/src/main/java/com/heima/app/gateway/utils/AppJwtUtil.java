@@ -97,9 +97,12 @@ public class AppJwtUtil {
             claims.getExpiration()
                     .before(new Date());
             // 需要自动刷新TOKEN
+            // 判断token的有效期与当前时间差
             if((claims.getExpiration().getTime()-System.currentTimeMillis())>REFRESH_TIME*1000){
+                //时间差大于300秒，返回-1
                 return -1;
             }else {
+                // 时间差小于300秒，返回0
                 return 0;
             }
         } catch (ExpiredJwtException ex) {

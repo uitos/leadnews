@@ -42,6 +42,8 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
                 throw new CustomException(AppHttpCodeEnum.AP_USER_DATA_NOT_EXIST);
             }
             // 4.比对密码
+            //5dca6c035c021c1156715b157496c03f
+            //先将密码加盐加密后与数据库中存在相应用户密码比较
             password = MD5Utils.encodeWithSalt(password, userDB.getSalt());
             if(!password.equals(userDB.getPassword())) {
                 throw new CustomException(AppHttpCodeEnum.PHONE_OR_PASSWORD_ERROR);

@@ -54,6 +54,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
         try {
             claims = AppJwtUtil.getClaimsBody(token);
             int result = AppJwtUtil.verifyToken(claims);
+            // 过期
             if(result == 1 || result == 2) {
                 flag = false;
             }
@@ -66,6 +67,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                 // 3.有效：放行
                 Object id = claims.get("id");
                 log.warn("token正确，用户ID:{}", id);
+                // 修改请求头为appUserId，并将id放入请求头中
                 exchange.mutate()
                     .request(builder -> builder.header("appUserId", id.toString()))
                     .build();
