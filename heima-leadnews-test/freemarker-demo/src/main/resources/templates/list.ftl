@@ -32,25 +32,27 @@
                 <td>${stu.age}</td>
                 <td>${stu.money}</td>
             </tr>
-            <#else>
-                <tr>
-                    <#-- stu_index ：元素_index，获取元素对应的下标 -->
-                    <td>${stu_index+1}</td>
-                    <td>${stu.name}</td>
-                    <td>${stu.age}</td>
-                    <td>${stu.money}</td>
-                </tr>
+        <#else>
+            <tr>
+                <#-- stu_index ：元素_index，获取元素对应的下标 -->
+                <td>${stu_index+1}</td>
+                <td>${stu.name}</td>
+                <td>${stu.age}</td>
+                <td>${stu.money}</td>
+            </tr>
         </#if>
     </#list>
 
 </table>
 <hr>
 
-<#-- Map 数据的展示 -->
+
+&lt;#&ndash; Map 数据的展示 &ndash;&gt;
 <b>map数据的展示：</b>
 <br/><br/>
 <a href="###">方式一：通过 map['keyname'].property</a><br/>
 输出stu1的学生信息：<br/>
+<#-- model.addAttribute("stuMap", stuMap); -->
 姓名：${stuMap['stu1'].name}<br/>
 年龄：${stuMap['stu1'].age}<br/>
 <br/>
@@ -60,6 +62,7 @@
 年龄：${stuMap.stu2.age}<br/>
 
 <br/>
+
 <a href="###">遍历map中两个学生信息：</a><br/>
 <table>
     <tr>
@@ -81,6 +84,8 @@
         </tr>
     </#list>
 </table>
+
+<#--
 <hr>
     <#if (date1?date >= date2?date)>
         条件成立
@@ -100,6 +105,7 @@
 <hr/>
 ${name ! ''}  <br>
 ${name2 ! 'name2不存在，给一个默认值'}
+
 
 </body>
 </html>
