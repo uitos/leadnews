@@ -44,62 +44,64 @@
     </#list>
 
 </table>
-<hr>
+<#--<hr>-->
 
-<#-- Map 数据的展示 -->
-<b>map数据的展示：</b>
-<br/><br/>
-<a href="###">方式一：通过 map['keyname'].property</a><br/>
-输出stu1的学生信息：<br/>
-姓名：${stuMap['stu1'].name}<br/>
-年龄：${stuMap['stu1'].age}<br/>
-<br/>
-<a href="###">方式二：通过map.keyname.property</a><br/>
-输出stu2的学生信息：<br/>
-姓名：${stuMap.stu2.name}<br/>
-年龄：${stuMap.stu2.age}<br/>
+<#--&lt;#&ndash; Map 数据的展示 &ndash;&gt;-->
+<#--<b>map数据的展示：</b>-->
+<#--<br/><br/>-->
+<#--<a href="###">方式一：通过 map['keyname'].property</a><br/>-->
+<#--输出stu1的学生信息：<br/>-->
+<#--姓名：${stuMap['stu1'].name}<br/>-->
+<#--年龄：${stuMap['stu1'].age}<br/>-->
+<#--<br/>-->
+<#--<a href="###">方式二：通过map.keyname.property</a><br/>-->
+<#--输出stu2的学生信息：<br/>-->
+<#--姓名：${stuMap.stu2.name}<br/>-->
+<#--年龄：${stuMap.stu2.age}<br/>-->
 
-<br/>
-<a href="###">遍历map中两个学生信息：</a><br/>
-<table>
-    <tr>
-        <td>序号</td>
-        <td>姓名</td>
-        <td>年龄</td>
-        <td>钱包</td>
-    </tr>
-    <#--
-        stuMap?keys ：获取stuMap中所有key
-        key : 正在遍历的key,可以自己取名字
-    -->
-    <#list stuMap?keys as key >
-        <tr>
-            <td>${key_index}</td>
-            <td>${stuMap[key].name}</td>
-            <td>${stuMap[key].age}</td>
-            <td>${stuMap[key].money}</td>
-        </tr>
-    </#list>
-</table>
+<#--<br/>-->
+<#--<a href="###">遍历map中两个学生信息：</a><br/>-->
+<#--<table>-->
+<#--    <tr>-->
+<#--        <td>序号</td>-->
+<#--        <td>姓名</td>-->
+<#--        <td>年龄</td>-->
+<#--        <td>钱包</td>-->
+<#--    </tr>-->
+<#--    &lt;#&ndash;-->
+<#--        stuMap?keys ：获取stuMap中所有key-->
+<#--        key : 正在遍历的key,可以自己取名字-->
+<#--    &ndash;&gt;-->
+<#--    <#list stuMap?keys as key >-->
+<#--        <tr>-->
+<#--            <td>${key_index}</td>-->
+<#--            <td>${stuMap[key].name}</td>-->
+<#--            <td>${stuMap[key].age}</td>-->
+<#--            <td>${stuMap[key].money}</td>-->
+<#--        </tr>-->
+<#--    </#list>-->
+<#--</table>-->
 <hr>
     <#if (date1?date >= date2?date)>
-        条件成立
+        date1 大于等于 date2
+        <#else>
+        date1 小于 date2
     </#if>
 
-<hr>
+<#--<hr>-->
 
-<#if date1??>
-    date1存在
-</#if>
+<#--<#if date1??>-->
+<#--    date1存在-->
+<#--</#if>-->
 
-<#if date3??>
-<#else>
-    date3不存在
-</#if>
+<#--<#if date3??>-->
+<#--<#else>-->
+<#--    date3不存在-->
+<#--</#if>-->
 
-<hr/>
-${name ! ''}  <br>
-${name2 ! 'name2不存在，给一个默认值'}
+<#--<hr/>-->
+<#--${name ! ''}  <br>-->
+<#--${name2 ! 'name2不存在，给一个默认值'}-->
 
 </body>
 </html>

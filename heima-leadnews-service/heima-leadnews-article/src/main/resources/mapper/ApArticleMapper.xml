@@ -96,5 +96,23 @@
         ORDER BY aa.publish_time DESC
         LIMIT #{dto.size}
     </select>
+    <select id="selectListByArticleHomeDto" resultType="com.heima.model.article.pojos.ApArticle">
+        select *
+        from ap_article aa
+        join ap_article_config aac
+        on aa.id = aac.article_id
+        where aac.is_down = 0  And aac.is_delete = 0
+        <if test="dto.tag != '__all__'">
+            and channel_id = #{dto.tag}
+        </if>
+        <if test="type == 1">
+            and aa.publish_time &lt; #{dto.minBehotTime}
+        </if>
+        <if test="type == 2">
+            and aa.publish_time > #{dto.maxBehotTime}
+        </if>
+        order By aa.publish_time desc
+        limit #{dto.size}
+    </select>
 
 </mapper>

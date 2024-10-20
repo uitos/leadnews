@@ -1,5 +1,7 @@
 package com.heima.minio.test;
 
+import com.heima.file.service.FileStorageService;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
@@ -9,6 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class MinioTest {
+    private FileStorageService fileStorageService;
+
+    @Test
+    public void testUpload() {
+        //FileInputStream fileInputStream = new FileInputStream("D:\\test.jpg");
+    }
 
 
 }

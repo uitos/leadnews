@@ -1,15 +1,15 @@
 package com.heima.article.test;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.file.service.impl.MinIOFileStorageService;
 import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleContent;
+import com.heima.model.common.dtos.ContenDto;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,35 +39,39 @@ public class GeneratePageTest {
     private MinIOFileStorageService minIOFileStorageService;
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void generateHtmlToMinioTest() throws Exception {
-        //1、查询文章内容
-        Long articleId = 1302862387124125698L;
-        ApArticleContent apArticleContent = apArticleContentMapper.selectOne(
-                Wrappers.<ApArticleContent>lambdaQuery()
+        // 定义文章ID
+        Long articleId = 1383827888816836609L;
+        // 查询文章内容
+        ApArticleContent articleContent = apArticleContentMapper.selectOne(
+                new LambdaQueryWrapper<ApArticleContent>()
                         .eq(ApArticleContent::getArticleId, articleId)
         );
-        //2、通过Freemarker填充内容
-        if(apArticleContent == null || StringUtils.isBlank(apArticleContent.getContent())){
-            return;
-        }
-        StringWriter out = new StringWriter();
+        // 获取文章内容的JSON字符串
+        String json = articleContent.getContent();
+        // 将JSON字符串解析为ContenDto对象列表
+        List<ContenDto> contenDtos = JSON.parseArray(json, ContenDto.class);
+        // 创建数据映射，用于存储文章内容
+        Map<String, Object> data=new HashMap<>();
+        data.put("content",contenDtos);
+        // 创建字符串写入器，用于处理模板生成的内容
+        StringWriter writer = new StringWriter();
+        // 获取模板
         Template template = configuration.getTemplate("article.ftl");
-        Map<String, Object> data = new HashMap<>();
-        List<Map> maps = JSON.parseArray(apArticleContent.getContent(), Map.class);
-        data.put("content", maps);
-        template.process(data,out);
-        //3、生成HTML，上传到Minio
-        ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
-        String path = minIOFileStorageService.uploadHtmlFile("", articleId + ".html", in);
-        System.out.println(path);
-        //4、更新ApArticle的staticUrl字段
+        // 使用数据和模板生成HTML内容
+        template.process(data, writer);
+        // 将生成的HTML内容转换为输入流
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
+        // 调用MinIO服务上传HTML文件
+        String url = minIOFileStorageService.uploadHtmlFile("article", articleId + ".html", inputStream);
+        // 创建ApArticle对象，用于更新文章的静态URL
         ApArticle apArticle = new ApArticle();
         apArticle.setId(articleId);
-        apArticle.setStaticUrl(path);
+        apArticle.setStaticUrl(url);
+        // 更新文章信息到数据库
         apArticleMapper.updateById(apArticle);
     }
 

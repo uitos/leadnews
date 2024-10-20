@@ -14,19 +14,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author ghy
- * @version 1.0.1
- * @date 2024-07-05 17:31:33
- */
+
 @SpringBootTest
 public class FreemarkerTest {
-    
+
     @Autowired
     private Configuration configuration;  //freemarker.template.Configuration;
-    
+
+    @Test
+    public void createHtml() throws Exception {
+        // 1.加载模版文件
+        Template template = configuration.getTemplate("func.ftl");
+        // 2.准备数据
+        Map data = getData2();
+        // 3.输出文件
+        template.process(data, new FileWriter("D://func.html"));
+    }
+
+    public Map getData2() {
+        Map<String, Object> model = new HashMap<>();
+        List<Student> stus = new ArrayList<>();
+        Student s1 = new Student();
+        s1.setName("小明");
+        s1.setAge(18);
+        s1.setMoney(1000.8f);
+        stus.add(s1);
+        Student s2 = new Student();
+        s2.setName("小红");
+        s2.setAge(19);
+        s2.setMoney(2000.8f);
+        stus.add(s2);
+        model.put("stus", stus);
+        model.put("today", new Date());
+        Double num = 123456789.123;
+        model.put("point", num);
+        return model;
+    }
+
     /**
-     * 
      * @throws Exception
      */
     @Test  //org.junit.jupiter.api.Test;
@@ -59,14 +84,14 @@ public class FreemarkerTest {
         stus.add(stu1);
         stus.add(stu2);
         //向model中存放List集合数据
-        data.put("stus",stus);
+        data.put("stus", stus);
 
         //------------------------------------
 
         //创建Map数据
-        HashMap<String,Student> stuMap = new HashMap<>();
-        stuMap.put("stu1",stu1);
-        stuMap.put("stu2",stu2);
+        HashMap<String, Student> stuMap = new HashMap<>();
+        stuMap.put("stu1", stu1);
+        stuMap.put("stu2", stu2);
         // 3.1 向model中存放Map数据
         data.put("stuMap", stuMap);
 
