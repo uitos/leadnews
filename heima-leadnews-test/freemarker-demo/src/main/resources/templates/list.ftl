@@ -81,25 +81,36 @@
         </tr>
     </#list>
 </table>
-<#--<hr>-->
-<#--    <#if (date1?date >= date2?date)>-->
-<#--        条件成立-->
-<#--    </#if>-->
+<hr>
+    <#if (date1?date >= date2?date)>
+        date1大于等于date2
+        <#else >
+        date1小于date2
+    </#if>
 
-<#--<hr>-->
+<hr>
 
-<#--<#if date1??>-->
-<#--    date1存在-->
-<#--</#if>-->
+<#if date1??>
+    date1存在
+</#if>
+<hr/>
+<#if date3??>
+<#else>
+    date3不存在
+</#if>
 
-<#--<#if date3??>-->
-<#--<#else>-->
-<#--    date3不存在-->
-<#--</#if>-->
+<hr/>
+${name ! ''}  <br>
+${name2 ! 'name2不存在，给一个默认值'}
 
-<#--<hr/>-->
-<#--${name ! ''}  <br>-->
-<#--${name2 ! 'name2不存在，给一个默认值'}-->
+<br>
+<hr/>
+<#if (age > 18)>
+    还是一枝花
+</#if>
+<#if (age <= 18)>
+    祖国的花骨朵儿
+</#if>
 
 </body>
 </html>
