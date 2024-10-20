@@ -35,8 +35,8 @@ public class MinIOFileStorageService implements FileStorageService {
 
     /**
      * @param dirPath
-     * @param filename  yyyy/mm/dd/file.jpg
-     * @return
+     * @param filename  yyyy/mm/dd/文件名
+     * @return   /前缀/yyyy/MM/dd/文件名
      */
     public String builderFilePath(String dirPath,String filename) {
         StringBuilder stringBuilder = new StringBuilder(50);
@@ -92,7 +92,8 @@ public class MinIOFileStorageService implements FileStorageService {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .object(filePath)
                     .contentType("text/html")
-                    .bucket(minIOConfigProperties.getBucket()).stream(inputStream,inputStream.available(),-1)
+                    .bucket(minIOConfigProperties.getBucket())
+                    .stream(inputStream,inputStream.available(),-1)
                     .build();
             minioClient.putObject(putObjectArgs);
             StringBuilder urlPath = new StringBuilder(minIOConfigProperties.getReadPath());

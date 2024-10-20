@@ -11,7 +11,6 @@
 集合大小：${stus?size}
 <hr>
 
-
 <b>获得日期</b><br>
 
 显示年月日: ${today?date}       <br>
@@ -25,9 +24,9 @@
 <hr>
 
 <b>内建函数C</b><br>
-没有C函数显示的数值：${point} <br>
+有逗号：${point} <br>
 
-有C函数显示的数值：${point?c}
+无逗号：${point?c}
 
 <hr>
 
