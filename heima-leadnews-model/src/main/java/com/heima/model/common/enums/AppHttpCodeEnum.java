@@ -23,10 +23,12 @@ public enum AppHttpCodeEnum {
     PARAM_INVALID(501,"无效参数"),
     PARAM_IMAGE_FORMAT_ERROR(502,"图片格式有误"),
     SERVER_ERROR(503,"服务器内部错误"),
+    PARAM_IMAGE_ERROR(504,"图片上传失败"),
     // 数据错误 1000~2000
     DATA_EXIST(1000,"数据已经存在"),
     AP_USER_DATA_NOT_EXIST(1001,"ApUser数据不存在"),
     DATA_NOT_EXIST(1002,"数据不存在"),
+    WM_USER_DATA_NOT_EXIST(1001,"WM用户不存在"),
     // 数据错误 3000~3500
     NO_OPERATOR_AUTH(3000,"无权限操作"),
     NEED_ADMIN(3001,"需要管理员权限");

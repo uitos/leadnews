@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @since 2023-09-21
  */
 @Service
-public class ApArticleContentServiceImpl extends ServiceImpl<ApArticleContentMapper, ApArticleContent> implements ApArticleContentService {
+public class ApArticleContentServiceImpl extends ServiceImpl<ApArticleContentMapper, ApArticleContent>
+        implements ApArticleContentService {
 
 }

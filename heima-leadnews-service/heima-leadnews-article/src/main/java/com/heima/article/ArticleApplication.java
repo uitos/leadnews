@@ -10,17 +10,11 @@ import org.springframework.context.annotation.Bean;
 
 
 @SpringBootApplication
-@MapperScan("com.heima.article.mapper")
 public class ArticleApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ArticleApplication.class,args);
     }
 
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        return interceptor;
-    }
+
 }

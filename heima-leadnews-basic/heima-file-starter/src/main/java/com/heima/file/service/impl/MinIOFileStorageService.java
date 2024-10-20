@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -23,6 +24,7 @@ import java.util.Date;
 @Slf4j
 @EnableConfigurationProperties(MinIOConfigProperties.class)
 @Import(MinIOConfig.class)
+@Service
 public class MinIOFileStorageService implements FileStorageService {
 
     @Autowired
@@ -34,7 +36,9 @@ public class MinIOFileStorageService implements FileStorageService {
     private final static String separator = "/";
 
     /**
-     * @param dirPath
+     *  构建文件路径
+     *  dirPath  文件前缀不为空则拼接到当前时间前后再拼接文件名
+     * @param dirPath  文件前缀
      * @param filename  yyyy/mm/dd/file.jpg
      * @return
      */
@@ -59,21 +63,29 @@ public class MinIOFileStorageService implements FileStorageService {
      */
     @Override
     public String uploadImgFile(String prefix, String filename,InputStream inputStream) {
+        //调用文件路径生成的方法
         String filePath = builderFilePath(prefix, filename);
         try {
+            //配置文件上传参数
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    // filePath  dirPath/yyyy/mm/dd/file.jpg
+                    // 图片上传到指定路径
                     .object(filePath)
+                    // 上传类型
                     .contentType("image/jpg")
-                    .bucket(minIOConfigProperties.getBucket()).stream(inputStream,inputStream.available(),-1)
+                    .bucket(minIOConfigProperties.getBucket())
+                    .stream(inputStream,inputStream.available(),-1)
                     .build();
+            //执行上传
             minioClient.putObject(putObjectArgs);
+            // 获取上传成功后的文件在服务器上的访问地址
             StringBuilder urlPath = new StringBuilder(minIOConfigProperties.getReadPath());
             urlPath.append(separator+minIOConfigProperties.getBucket());
             urlPath.append(separator);
             urlPath.append(filePath);
             return urlPath.toString();
         }catch (Exception ex){
-            log.error("minio put file error.",ex);
+            log.error("minio 上传图片文件失败.",ex);
             throw new RuntimeException("上传文件失败");
         }
     }
