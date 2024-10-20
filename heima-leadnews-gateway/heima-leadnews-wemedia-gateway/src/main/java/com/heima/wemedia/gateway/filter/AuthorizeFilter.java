@@ -48,6 +48,11 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
             }
+            //token有效
+            //重置请求头
+            exchange.mutate().request(
+                    builder -> builder.header("wmUserId", claimsBody.get("id").toString())
+            ).build();
 
         } catch (Exception e) {
             e.printStackTrace();

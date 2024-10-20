@@ -29,7 +29,8 @@ public enum AppHttpCodeEnum {
     DATA_NOT_EXIST(1002,"数据不存在"),
     // 数据错误 3000~3500
     NO_OPERATOR_AUTH(3000,"无权限操作"),
-    NEED_ADMIN(3001,"需要管理员权限");
+    NEED_ADMIN(3001,"需要管理员权限"),
+    FILE_UPLOAD_ERROR(35001,"图片上传异常" );
 
     int code;
     String errorMessage;
