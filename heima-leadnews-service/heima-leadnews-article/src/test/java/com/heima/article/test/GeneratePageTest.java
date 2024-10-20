@@ -1,15 +1,18 @@
 package com.heima.article.test;
 
+
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
-import com.heima.file.service.impl.MinIOFileStorageService;
+import com.heima.article.po.ContentDto;
+import com.heima.file.service.FileStorageService;
 import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleContent;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,43 +31,32 @@ import java.util.Map;
  */
 @SpringBootTest
 public class GeneratePageTest {
-
+    @Autowired
+    private FileStorageService fileStorageService;
     @Autowired
     private ApArticleContentMapper apArticleContentMapper;
     @Autowired
     private ApArticleMapper apArticleMapper;
     @Autowired
     private Configuration configuration;
-    @Autowired
-    private MinIOFileStorageService minIOFileStorageService;
 
-    /**
-     *
-     * @throws Exception
-     */
     @Test
-    public void generateHtmlToMinioTest() throws Exception {
-        //1、查询文章内容
-        Long articleId = 1302862387124125698L;
+    public void generateArticlePageTest() throws Exception {
+        Long articleId = 1383827952326987778L;
         ApArticleContent apArticleContent = apArticleContentMapper.selectOne(
-                Wrappers.<ApArticleContent>lambdaQuery()
+                new LambdaQueryWrapper<ApArticleContent>()
                         .eq(ApArticleContent::getArticleId, articleId)
         );
-        //2、通过Freemarker填充内容
-        if(apArticleContent == null || StringUtils.isBlank(apArticleContent.getContent())){
-            return;
-        }
+        String json = apArticleContent.getContent();
+        List<ContentDto> list = JSON.parseArray(json, ContentDto.class);
+        Map<String, Object> data = new HashMap<>();
+        data.put("content", list);
+
         StringWriter out = new StringWriter();
         Template template = configuration.getTemplate("article.ftl");
-        Map<String, Object> data = new HashMap<>();
-        List<Map> maps = JSON.parseArray(apArticleContent.getContent(), Map.class);
-        data.put("content", maps);
-        template.process(data,out);
-        //3、生成HTML，上传到Minio
+        template.process(data, out);
         ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
-        String path = minIOFileStorageService.uploadHtmlFile("", articleId + ".html", in);
-        System.out.println(path);
-        //4、更新ApArticle的staticUrl字段
+        String path = fileStorageService.uploadHtmlFile("", articleId + ".html", in);
         ApArticle apArticle = new ApArticle();
         apArticle.setId(articleId);
         apArticle.setStaticUrl(path);

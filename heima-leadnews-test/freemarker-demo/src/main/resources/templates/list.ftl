@@ -32,14 +32,14 @@
                 <td>${stu.age}</td>
                 <td>${stu.money}</td>
             </tr>
-            <#else>
-                <tr>
-                    <#-- stu_index ：元素_index，获取元素对应的下标 -->
-                    <td>${stu_index+1}</td>
-                    <td>${stu.name}</td>
-                    <td>${stu.age}</td>
-                    <td>${stu.money}</td>
-                </tr>
+        <#else>
+            <tr>
+                <#-- stu_index ：元素_index，获取元素对应的下标 -->
+                <td>${stu_index+1}</td>
+                <td>${stu.name}</td>
+                <td>${stu.age}</td>
+                <td>${stu.money}</td>
+            </tr>
         </#if>
     </#list>
 
@@ -82,9 +82,9 @@
     </#list>
 </table>
 <hr>
-    <#if (date1?date >= date2?date)>
-        条件成立
-    </#if>
+<#if (date1?date >= date2?date)>
+    条件成立
+</#if>
 
 <hr>
 
@@ -98,8 +98,11 @@
 </#if>
 
 <hr/>
-${name ! ''}  <br>
+${name ! ''} <br>
 ${name2 ! 'name2不存在，给一个默认值'}
-
+<br>
+<#if (age>20)>
+    年龄大于20
+</#if>
 </body>
 </html>
