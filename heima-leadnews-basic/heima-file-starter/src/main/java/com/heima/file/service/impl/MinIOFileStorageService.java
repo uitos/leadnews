@@ -1,6 +1,5 @@
 package com.heima.file.service.impl;
 
-
 import com.heima.file.config.MinIOConfig;
 import com.heima.file.config.MinIOConfigProperties;
 import com.heima.file.service.FileStorageService;
@@ -12,9 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +21,6 @@ import java.util.Date;
 @Slf4j
 @EnableConfigurationProperties(MinIOConfigProperties.class)
 @Import(MinIOConfig.class)
-@Service
 public class MinIOFileStorageService implements FileStorageService {
 
     @Autowired
@@ -45,6 +41,7 @@ public class MinIOFileStorageService implements FileStorageService {
     public String builderFilePath(String dirPath,String filename) {
         StringBuilder stringBuilder = new StringBuilder(50);
         if(!StringUtils.isEmpty(dirPath)){
+            //前缀不为空则将前缀拼接在上传路径最前
             stringBuilder.append(dirPath).append(separator);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -90,6 +87,7 @@ public class MinIOFileStorageService implements FileStorageService {
         }
     }
 
+
     /**
      *  上传html文件
      * @param prefix  文件前缀
@@ -104,7 +102,8 @@ public class MinIOFileStorageService implements FileStorageService {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .object(filePath)
                     .contentType("text/html")
-                    .bucket(minIOConfigProperties.getBucket()).stream(inputStream,inputStream.available(),-1)
+                    .bucket(minIOConfigProperties.getBucket())
+                    .stream(inputStream,inputStream.available(),-1)
                     .build();
             minioClient.putObject(putObjectArgs);
             StringBuilder urlPath = new StringBuilder(minIOConfigProperties.getReadPath());
@@ -119,6 +118,7 @@ public class MinIOFileStorageService implements FileStorageService {
         }
     }
 
+
     /**
      * 删除文件
      * @param pathUrl  文件全路径
@@ -127,7 +127,9 @@ public class MinIOFileStorageService implements FileStorageService {
     public void delete(String pathUrl) {
         String key = pathUrl.replace(minIOConfigProperties.getEndpoint()+"/","");
         int index = key.indexOf(separator);
+        //分割获取bucket名
         String bucket = key.substring(0,index);
+        //获取不包含bucket名的文件名
         String filePath = key.substring(index+1);
         // 删除Objects
         RemoveObjectArgs removeObjectArgs = RemoveObjectArgs.builder().bucket(bucket).object(filePath).build();

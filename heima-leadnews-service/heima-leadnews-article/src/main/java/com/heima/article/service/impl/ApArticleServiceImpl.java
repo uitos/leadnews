@@ -9,6 +9,7 @@ import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.wm.dtos.WmMaterialDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,4 +45,6 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         //封装输出数据
         return ResponseResult.okResult(apArticles);
     }
+
+
 }

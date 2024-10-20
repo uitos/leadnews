@@ -4,6 +4,7 @@ import com.heima.article.service.ApArticleService;
 import com.heima.common.constants.ArticleConstants;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.wm.dtos.WmMaterialDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,5 +42,7 @@ public class ApArticleController {
 
         return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_MORE);
     }
+
+
 
 }

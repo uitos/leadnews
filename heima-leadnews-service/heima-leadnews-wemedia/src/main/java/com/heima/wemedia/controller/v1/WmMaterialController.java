@@ -1,10 +1,12 @@
 package com.heima.wemedia.controller.v1;
 
 import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.wm.dtos.WmMaterialDto;
 import com.heima.wemedia.service.WmMaterialService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,12 @@ public class WmMaterialController {
     public ResponseResult uploadPicture(MultipartFile multipartFile){
         log.info("上传图片文件:{}",multipartFile);
         return wmMaterialService.uploadPicture(multipartFile);
+    }
+
+    @PostMapping("/list")
+    public ResponseResult list(@RequestBody WmMaterialDto dto){
+        log.info("分页查询素材列表:{}",dto);
+        return wmMaterialService.findByPage(dto);
     }
 
 }

@@ -27,7 +27,7 @@ public class WmTokenInterceptor implements HandlerInterceptor {
         if (StringUtils.isNotBlank(userId)) {
             //将userId设置到ThreadLocal中 方便后续使用
             log.info("Wm自定义拦截器获取到的userId为:{}", userId);
-            WmUserContext.setUser(Long.valueOf(userId));
+            WmUserContext.setUserId(Long.valueOf(userId));
         } else {
             log.info("可能为登录,Wm自定义拦截器获取到的userId为空");
         }
