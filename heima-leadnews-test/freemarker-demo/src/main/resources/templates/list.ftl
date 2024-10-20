@@ -85,11 +85,11 @@
     </#list>
 </table>
 
-<#--
+
 <hr>
-    <#if (date1?date >= date2?date)>
-        条件成立
-    </#if>
+<#if (date1?date >= date2?date)>
+    条件成立
+</#if>
 
 <hr>
 
@@ -103,9 +103,12 @@
 </#if>
 
 <hr/>
-${name ! ''}  <br>
+${name ! ''} <br>
 ${name2 ! 'name2不存在，给一个默认值'}
-
+<hr>
+<#if (age>20)>
+    name2存在
+</#if>
 
 </body>
 </html>
