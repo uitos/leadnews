@@ -11,6 +11,8 @@ public enum AppHttpCodeEnum {
     NEED_LOGIN(1,"需要登录后操作"),
     LOGIN_PASSWORD_ERROR(2,"密码错误"),
     PHONE_OR_PASSWORD_ERROR(3,"手机号或密码错误"),
+    // 文件上传 11-20
+    FILE_ERROR(11,"上传错误"),
     // TOKEN50~100
     TOKEN_INVALID(50,"无效的TOKEN"),
     TOKEN_EXPIRE(51,"TOKEN已过期"),

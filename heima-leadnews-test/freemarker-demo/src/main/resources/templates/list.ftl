@@ -62,7 +62,7 @@
 <br/>
 
 
-<#--<a href="###">遍历map中两个学生信息：</a><br/>
+<a href="###">遍历map中两个学生信息：</a><br/>
 <table>
     <tr>
         <td>序号</td>
@@ -70,10 +70,10 @@
         <td>年龄</td>
         <td>钱包</td>
     </tr>
-    &lt;#&ndash;
+    <#--
         stuMap?keys ：获取stuMap中所有key
         key : 正在遍历的key,可以自己取名字
-    &ndash;&gt;
+    -->
     <#list stuMap?keys as key >
         <tr>
             <td>${key_index}</td>
@@ -101,7 +101,7 @@
 
 <hr/>
 ${name ! ''}  <br>
-${name2 ! 'name2不存在，给一个默认值'}-->
+${name2 ! 'name2不存在，给一个默认值'}
 
 </body>
 </html>
