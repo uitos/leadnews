@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 /**
- * @author ghy
- * @version 1.0.1
- * @date 2024-07-03 11:18:39
+ * @author enchanter
  */
 @RestController
 @RequestMapping("/api/v1/login")

@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * @author enchanter
  */
 @RestController("/api/v1")
-public class MaterialController {
+public class WmMaterialController {
 
     @Resource
     private WmMaterialService wmMaterialService;

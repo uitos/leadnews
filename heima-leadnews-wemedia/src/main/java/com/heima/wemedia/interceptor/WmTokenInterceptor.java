@@ -16,7 +16,7 @@ public class WmTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String wmUserIdStr = request.getHeader("wmUserId");
-        log.warn("自媒体拦截器获取到的用户ID：{}",wmUserIdStr);
+        log.info("自媒体拦截器获取到的用户ID：{}",wmUserIdStr);
         if(StringUtils.isNotBlank(wmUserIdStr)){
             UserContext.setId(Long.valueOf(wmUserIdStr));
         }

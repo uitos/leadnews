@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * @author enchanter
+ */
 @Component
 @Slf4j
 public class AuthorizeFilter implements Ordered, GlobalFilter {
@@ -48,9 +51,11 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
             }
-//将请求头传递到下一个微服务
+
+            //将请求头传递到下一个微服务
             exchange.mutate()
                     .request(b -> b.header("wmUserId", claimsBody.get("id").toString()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

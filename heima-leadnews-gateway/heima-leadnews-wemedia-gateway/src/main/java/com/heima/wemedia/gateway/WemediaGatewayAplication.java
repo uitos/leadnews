@@ -5,6 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 
+/**
+ * @author enchanter
+ * @author enchanter
+ * @author enchanter
+ */
 @SpringBootApplication
 @EnableDiscoveryClient
 public class WemediaGatewayAplication {

@@ -16,6 +16,9 @@ import org.springframework.util.DigestUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author enchanter
+ */
 @Service
 public class WmUserServiceImpl extends ServiceImpl<WmUserMapper, WmUser> implements WmUserService {
 
