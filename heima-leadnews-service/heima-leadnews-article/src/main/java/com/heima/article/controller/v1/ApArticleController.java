@@ -34,13 +34,13 @@ public class ApArticleController {
         return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_NEW);
     }
 
-    @PostMapping("/load")
+    @PostMapping("/loadnew")
     public ResponseResult loadNew(@RequestBody ArticleHomeDto dto) {
         log.info("加载文章列表参数dto:{}", dto);
         return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_NEW);
     }
 
-    @PostMapping("/load")
+    @PostMapping("/loadmore")
     public ResponseResult loadMore(@RequestBody ArticleHomeDto dto) {
         log.info("加载文章列表参数dto:{}", dto);
         return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_NEW);

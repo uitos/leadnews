@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.file.service.impl.MinIOFileStorageService;
+import com.heima.model.article.dtos.ContentDto;
 import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleContent;
 import freemarker.template.Configuration;
@@ -19,7 +20,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author ghy
@@ -54,16 +54,29 @@ public class GeneratePageTest {
         if(apArticleContent == null || StringUtils.isBlank(apArticleContent.getContent())){
             return;
         }
+        String json = apArticleContent.getContent();
+        List<ContentDto> list = JSON.parseArray(json, ContentDto.class);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("content", list);
+
         StringWriter out = new StringWriter();
         Template template = configuration.getTemplate("article.ftl");
-        Map<String, Object> data = new HashMap<>();
-        List<Map> maps = JSON.parseArray(apArticleContent.getContent(), Map.class);
-        data.put("content", maps);
         template.process(data,out);
+
+//        Map<String, Object> data = new HashMap<>();
+        //
+//        List<Map> maps = JSON.parseArray(apArticleContent.getContent(), Map.class);
+//        data.put("content", maps);
+//        template.process(data,out);
+
+
         //3、生成HTML，上传到Minio
         ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
         String path = minIOFileStorageService.uploadHtmlFile("", articleId + ".html", in);
         System.out.println(path);
+
+
+
         //4、更新ApArticle的staticUrl字段
         ApArticle apArticle = new ApArticle();
         apArticle.setId(articleId);

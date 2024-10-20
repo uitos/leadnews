@@ -23,7 +23,7 @@ import java.util.Map;
 public class FreemarkerTest {
     
     @Autowired
-    private Configuration configuration;  //freemarker.template.Configuration;
+    private Configuration configuration;
     
     /**
      * 
@@ -32,15 +32,15 @@ public class FreemarkerTest {
     @Test  //org.junit.jupiter.api.Test;
     public void generateHtmlTest() throws Exception {
         //获取模板对象
-        Template template = configuration.getTemplate("list.ftl");
+        Template template = configuration.getTemplate("func.ftl");
         //准备数据，是一个Map
-        Map data = getData();
+        Map<String, Object> data = getData();
         //输出页面
-        template.process(data, new FileWriter("D://list.html"));
+        template.process(data, new FileWriter("D:\\hello.html"));
     }
 
-    private Map getData() {
-        Map data = new HashMap();
+    private Map<String, Object> getData() {
+        Map<String, Object> data = new HashMap<>();
         //------------------------------------
         Student stu1 = new Student();
         stu1.setName("小强");
@@ -53,28 +53,14 @@ public class FreemarkerTest {
         stu2.setName("小红");
         stu2.setMoney(200.1f);
         stu2.setAge(19);
-
-        //将两个对象模型数据存放到List集合中
         List<Student> stus = new ArrayList<>();
         stus.add(stu1);
         stus.add(stu2);
-        //向model中存放List集合数据
-        data.put("stus",stus);
 
-        //------------------------------------
+        data.put("stus", stus);
 
-        //创建Map数据
-        HashMap<String,Student> stuMap = new HashMap<>();
-        stuMap.put("stu1",stu1);
-        stuMap.put("stu2",stu2);
-        // 3.1 向model中存放Map数据
-        data.put("stuMap", stuMap);
-
-        Date now = new Date();
-        data.put("date1", now);
-        data.put("date2", now);
-
-        data.put("name", "小李");
+        data.put("today", new Date());
+        data.put("point", 1234567.89);
         return data;
     }
 

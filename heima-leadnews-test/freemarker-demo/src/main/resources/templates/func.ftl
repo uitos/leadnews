@@ -25,9 +25,9 @@
 <hr>
 
 <b>内建函数C</b><br>
-没有C函数显示的数值：${point} <br>
+有逗号：${point} <br>
 
-有C函数显示的数值：${point?c}
+无逗号：${point?c}
 
 <hr>
 
