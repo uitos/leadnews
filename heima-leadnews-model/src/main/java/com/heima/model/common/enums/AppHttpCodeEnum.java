@@ -30,7 +30,8 @@ public enum AppHttpCodeEnum {
     // 数据错误 3000~3500
     NO_OPERATOR_AUTH(3000,"无权限操作"),
     NEED_ADMIN(3001,"需要管理员权限"),
-    FILE_UPLOAD_ERROR(35001,"图片上传异常" );
+    FILE_UPLOAD_ERROR(3501,"图片上传异常" ),
+    NEWS_PUBLISHED_FAILED(3502, "服务器异常，提交失败!");
 
     int code;
     String errorMessage;
