@@ -98,7 +98,7 @@
 </#if>
 
 <hr/>
-${name ! ''}  <br>
+${name ! '123'}  <br>
 ${name2 ! 'name2不存在，给一个默认值'}
 
 </body>

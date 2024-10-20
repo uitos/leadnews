@@ -39,6 +39,38 @@ public class FreemarkerTest {
         template.process(data, new FileWriter("D://list.html"));
     }
 
+    @Test  //org.junit.jupiter.api.Test;
+    public void generateHtmlTest1() throws Exception {
+        //获取模板对象
+        Template template = configuration.getTemplate("list.ftl");
+
+        template.process(getData1(),new FileWriter("D://list1.html"));
+
+
+    }
+
+    private Map getData1() {
+        Map data = new HashMap();
+
+        List<Student> students=new ArrayList<>();
+        students.add(new Student("张三",12,null,3000F));
+        students.add(new Student("李四",18,null,4000F));
+        data.put("stus",students);
+
+        Map<String,Student> studentMap=new HashMap();
+        studentMap.put("stu1",new Student("王五",33,null,12000F));
+        studentMap.put("stu2",new Student("钱六",23,null,12000F));
+        data.put("stuMap",studentMap);
+
+        data.put("date1","2021-01-10");
+        data.put("date2","2021-01-11");
+
+        data.put("name","张三");
+
+
+
+        return data;
+    }
     private Map getData() {
         Map data = new HashMap();
         //------------------------------------
