@@ -36,7 +36,7 @@ public class FreemarkerTest {
         //准备数据，是一个Map
         Map data = getData();
         //输出页面
-        template.process(data, new FileWriter("D://list.html"));
+        template.process(data, new FileWriter("F://list.html"));
     }
 
     private Map getData() {
