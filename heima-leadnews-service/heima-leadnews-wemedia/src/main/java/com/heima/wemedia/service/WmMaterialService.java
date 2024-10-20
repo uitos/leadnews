@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * @author mianbao
+ * 1
  */
 public interface WmMaterialService {
     ResponseResult upload(MultipartFile file) throws IOException;

@@ -24,6 +24,7 @@ import java.util.UUID;
 
 /**
  * @author mianbao
+ * 1
  */
 @Service
 public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMaterial> implements WmMaterialService {

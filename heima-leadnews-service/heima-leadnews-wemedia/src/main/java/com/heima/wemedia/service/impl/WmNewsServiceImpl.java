@@ -11,13 +11,13 @@ import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.model.wemedia.pojos.WmNews;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.service.WmNewsService;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 /**
  * @author mianbao
+ * 1
  */
 @Service
 public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> implements WmNewsService {

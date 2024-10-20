@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * @author mianbao
+ * 1
  */
 @Service
 public class WmChannelServiceImpl extends ServiceImpl<WmChannelMapper, WmChannel> implements WmChannelService {

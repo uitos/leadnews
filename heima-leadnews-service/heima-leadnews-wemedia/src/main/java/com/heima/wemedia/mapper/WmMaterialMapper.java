@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author mianbao
+ * 1
  */
 @Mapper
 public interface WmMaterialMapper extends BaseMapper<WmMaterial> {

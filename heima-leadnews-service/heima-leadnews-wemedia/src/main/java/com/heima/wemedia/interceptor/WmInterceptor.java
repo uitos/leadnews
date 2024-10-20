@@ -2,7 +2,6 @@ package com.heima.wemedia.interceptor;
 
 import com.heima.common.utils.UserContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import java.util.Objects;
 
 /**
  * @author mianbao
+ * 1
  */
 @Slf4j
 public class WmInterceptor implements HandlerInterceptor {

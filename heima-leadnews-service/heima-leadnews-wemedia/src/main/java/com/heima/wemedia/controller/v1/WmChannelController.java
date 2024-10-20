@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 /**
  * @author mianbao
+ * 1
  */
 @RestController
 @RequestMapping("/api/v1/channel")
