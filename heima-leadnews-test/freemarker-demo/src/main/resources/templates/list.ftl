@@ -84,6 +84,8 @@
 <hr>
     <#if (date1?date >= date2?date)>
         条件成立
+        <#else >
+        条件不成立
     </#if>
 
 <hr>

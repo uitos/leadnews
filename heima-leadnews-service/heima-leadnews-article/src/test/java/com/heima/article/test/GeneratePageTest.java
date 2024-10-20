@@ -1,10 +1,13 @@
 package com.heima.article.test;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
+import com.heima.file.service.FileStorageService;
 import com.heima.file.service.impl.MinIOFileStorageService;
+import com.heima.model.article.dtos.ContentDto;
 import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleContent;
 import freemarker.template.Configuration;
@@ -36,7 +39,7 @@ public class GeneratePageTest {
     @Autowired
     private Configuration configuration;
     @Autowired
-    private MinIOFileStorageService minIOFileStorageService;
+    private FileStorageService fileStorageService;
 
     /**
      *
@@ -44,31 +47,26 @@ public class GeneratePageTest {
      */
     @Test
     public void generateHtmlToMinioTest() throws Exception {
-        //1、查询文章内容
-        Long articleId = 1302862387124125698L;
+        //1. 查询文章内容
+        Long articleId = 1383827976310018049L;
         ApArticleContent apArticleContent = apArticleContentMapper.selectOne(
-                Wrappers.<ApArticleContent>lambdaQuery()
-                        .eq(ApArticleContent::getArticleId, articleId)
+                new LambdaQueryWrapper<ApArticleContent>().eq(ApArticleContent::getArticleId, articleId)
         );
-        //2、通过Freemarker填充内容
-        if(apArticleContent == null || StringUtils.isBlank(apArticleContent.getContent())){
-            return;
-        }
-        StringWriter out = new StringWriter();
+        //2. 填充模板
+        String jsonStr = apArticleContent.getContent();
+        List<ContentDto> list = JSON.parseArray(jsonStr, ContentDto.class);
+        Map<String,Object> map = new HashMap<>();
+        map.put("content",list);
         Template template = configuration.getTemplate("article.ftl");
-        Map<String, Object> data = new HashMap<>();
-        List<Map> maps = JSON.parseArray(apArticleContent.getContent(), Map.class);
-        data.put("content", maps);
-        template.process(data,out);
-        //3、生成HTML，上传到Minio
+        StringWriter out = new StringWriter();
+        template.process(map,out);
+        //3. 上传到Oss
         ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
-        String path = minIOFileStorageService.uploadHtmlFile("", articleId + ".html", in);
-        System.out.println(path);
-        //4、更新ApArticle的staticUrl字段
+        String url = fileStorageService.uploadHtmlFile(null, articleId + ".html", in);
+        //4. 更新文章的静态URL
         ApArticle apArticle = new ApArticle();
         apArticle.setId(articleId);
-        apArticle.setStaticUrl(path);
+        apArticle.setStaticUrl(url);
         apArticleMapper.updateById(apArticle);
     }
-
 }

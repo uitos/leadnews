@@ -34,13 +34,13 @@ public class FreemarkerTest {
         //获取模板对象
         Template template = configuration.getTemplate("list.ftl");
         //准备数据，是一个Map
-        Map data = getData();
+        Map<String,Object> data = getData();
         //输出页面
         template.process(data, new FileWriter("D://list.html"));
     }
 
-    private Map getData() {
-        Map data = new HashMap();
+    private Map<String,Object> getData() {
+        Map<String,Object> data = new HashMap<>();
         //------------------------------------
         Student stu1 = new Student();
         stu1.setName("小强");
