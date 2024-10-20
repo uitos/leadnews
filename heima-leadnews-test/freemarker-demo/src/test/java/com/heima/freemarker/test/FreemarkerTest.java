@@ -23,6 +23,7 @@ import java.util.Map;
 public class FreemarkerTest {
     
     @Autowired
+    //freemarker.template.Configuration; 生成魔板板对象
     private Configuration configuration;  //freemarker.template.Configuration;
     
     /**
@@ -67,14 +68,16 @@ public class FreemarkerTest {
         HashMap<String,Student> stuMap = new HashMap<>();
         stuMap.put("stu1",stu1);
         stuMap.put("stu2",stu2);
-        // 3.1 向model中存放Map数据
+        // 3.1 向model中存放Map数据A
         data.put("stuMap", stuMap);
 
+        Date date1 = new Date();
         Date now = new Date();
+        now.setTime(now.getTime() + 3600 * 1000 * 24 * 365);
         data.put("date1", now);
-        data.put("date2", now);
-
+        data.put("date2", date1);
         data.put("name", "小李");
+
         return data;
     }
 
