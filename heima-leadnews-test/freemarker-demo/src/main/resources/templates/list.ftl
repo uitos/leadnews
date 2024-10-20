@@ -81,25 +81,25 @@
         </tr>
     </#list>
 </table>
-<#--<hr>-->
-<#--    <#if (date1?date >= date2?date)>-->
-<#--        条件成立-->
-<#--    </#if>-->
+<hr>
+    <#if (date1?date >= date2?date)>
+        条件成立
+    </#if>
 
-<#--<hr>-->
+<hr>
 
-<#--<#if date1??>-->
-<#--    date1存在-->
-<#--</#if>-->
+<#if date1??>
+    date1存在
+</#if>
 
-<#--<#if date3??>-->
-<#--<#else>-->
-<#--    date3不存在-->
-<#--</#if>-->
+<#if date3??>
+<#else>
+    date3不存在
+</#if>
 
-<#--<hr/>-->
-<#--${name ! ''}  <br>-->
-<#--${name2 ! 'name2不存在，给一个默认值'}-->
+<hr/>
+${name ! ''}  <br>
+${name2 ! 'name2不存在，给一个默认值'}
 
 </body>
 </html>
