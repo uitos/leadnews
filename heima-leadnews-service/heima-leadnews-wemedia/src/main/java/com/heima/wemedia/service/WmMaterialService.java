@@ -19,4 +19,10 @@ public interface WmMaterialService extends IService<WmMaterial> {
 
     ResponseResult findByPage(WmMaterialDto dto);
 
+    ResponseResult collect(Integer materialId);
+
+    ResponseResult cancelCollect(Integer materialId);
+
+    ResponseResult deleteByMaterialId(Integer materialId);
+
 }

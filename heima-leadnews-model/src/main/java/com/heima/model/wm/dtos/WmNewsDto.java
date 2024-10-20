@@ -9,6 +9,7 @@ import java.util.List;
 public class WmNewsDto {
     
     private Integer id;
+    private short enable;
      /**
      * 标题
      */

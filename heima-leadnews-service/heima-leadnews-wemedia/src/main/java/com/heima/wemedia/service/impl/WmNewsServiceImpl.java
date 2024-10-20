@@ -23,6 +23,7 @@ import com.heima.wemedia.service.WmNewsService;
 import com.heima.wemedia.utils.WmUserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +62,6 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         // 分页
         IPage<WmNews> page = new Page<>(dto.getPage(), dto.getSize());
         // 条件
-
         lambdaQuery()
                 .eq(dto.getStatus() != null, WmNews::getStatus, dto.getStatus())
                 .between(dto.getBeginPubDate() != null && dto.getEndPubDate() != null, WmNews::getPublishTime, dto.getBeginPubDate(), dto.getEndPubDate())
@@ -79,6 +79,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
     /**
      * 提交文章初稿
+     *
      * @param dto
      * @return
      */
@@ -89,8 +90,12 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         if (Objects.isNull(dto)) {
             throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
         }
-        if(dto.getId() != null){
+        if (dto.getId() != null) {
+            //将草稿删除
             wmNewsMapper.deleteById(dto.getId());
+            //2、删除wm_news_material表中的数据
+            wmNewsMaterialMapper.delete(new QueryWrapper<WmNewsMaterial>().lambda()
+                    .eq(WmNewsMaterial::getNewsId, dto.getId()));
         }
         //数据处理
         //status 0 为草稿 1为待审核
@@ -111,29 +116,82 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         //图片用逗号分隔
         StringBuffer imageStr = new StringBuffer();
         for (int i = 0; i < images.size(); i++) {
-            if(i==images.size()-1){
+            if (i == images.size() - 1) {
                 imageStr.append(images.get(i));
-            }else{
-                imageStr.append(images.get(i)+",");
+            } else {
+                imageStr.append(images.get(i) + ",");
             }
         }
         wmNews.setImages(imageStr.toString());
         wmNewsMapper.insert(wmNews);
-        log.info("文章id:{}",wmNews.getId());
+        log.info("文章id:{}", wmNews.getId());
         //2、通过素材url获取 wmMaterial中的素材id、type存入wm_news_material表中
         List<WmMaterial> wmMaterials = wmMaterialMapper.selectBatchUrls(images);
+        for (int i = 0; i < wmMaterials.size(); i++) {
+            WmMaterial wmMaterial = wmMaterials.get(i);
+            //插入wm_news_material表中的数据
             wmNewsMaterialMapper.
-                    saveRelations(wmMaterials,wmNews.getId());
+                    saveRelations(wmMaterial.getId(), wmMaterial.getType(), wmNews.getId(), i);
+        }
+
         return new ResponseResult();
     }
 
+    /**
+     * 根据文章id查询文章详情
+     *
+     * @param newsId
+     * @return
+     */
     @Override
     public ResponseResult selectByNewsId(Integer newsId) {
         // 校验参数
-        if(newsId == null){
+        if (newsId == null) {
             throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
         }
         WmNews wmNews = wmNewsMapper.selectById(newsId);
         return ResponseResult.okResult(wmNews);
+    }
+
+    /**
+     * 上下架文章
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult downOrUp(WmNewsDto dto) {
+        if (Objects.isNull(dto)) {
+            throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        WmNews wmNews = new WmNews();
+        wmNews.setId(dto.getId());
+        wmNews.setEnable(dto.getEnable());
+        int i = wmNewsMapper.updateById(wmNews);
+        if (i < 1) {
+            throw new CustomException(AppHttpCodeEnum.DOWN_OR_UP_CONTENTS_ERROR);
+        }
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 删除文章
+     * @param newsId 文章id
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseResult deleteByNewsId(Integer newsId) {
+        if(newsId == null){
+            throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+
+        //删除文章的同时 wm_news_material表中的数据也需要删除
+        int i = wmNewsMapper.deleteById(newsId);
+        wmNewsMaterialMapper.deleteByNewsId(newsId);
+        if(i>=1){
+            return ResponseResult.okResult(200, "删除文章成功");
+        }
+        throw new CustomException(AppHttpCodeEnum.DELETE_CONTENTS_ERROR);
+
     }
 }

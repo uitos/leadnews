@@ -5,7 +5,7 @@
 
     <select id="selectBatchUrls" resultType="com.heima.model.wm.pojos.WmMaterial"
             parameterType="java.util.List">
-        select url from wm_material where url in
+        select id,url,type from wm_material where url in
         <foreach collection="list" item="url" open="(" separator="," close=")">
             #{url}
         </foreach>

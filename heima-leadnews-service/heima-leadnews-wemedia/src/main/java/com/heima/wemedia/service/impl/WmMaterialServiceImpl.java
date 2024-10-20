@@ -1,6 +1,7 @@
 package com.heima.wemedia.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.common.exception.CustomException;
@@ -11,6 +12,7 @@ import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.wm.dtos.WmMaterialDto;
 import com.heima.model.wm.pojos.WmMaterial;
 import com.heima.wemedia.mapper.WmMaterialMapper;
+import com.heima.wemedia.mapper.WmNewsMaterialMapper;
 import com.heima.wemedia.service.WmMaterialService;
 import com.heima.wemedia.utils.WmUserContext;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
     private FileStorageService fileStorageService;
     @Autowired
     private WmMaterialMapper wmMaterialMapper;
+    @Autowired
+    private WmNewsMaterialMapper wmNewsMaterialMapper;
 
     /**
      * 自媒体图片上传
@@ -71,6 +75,11 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         return ResponseResult.okResult(wmMaterial);
     }
 
+    /**
+     * 分页查询素材
+     * @param dto
+     * @return
+     */
     @Override
     public ResponseResult findByPage(WmMaterialDto dto) {
 
@@ -81,11 +90,59 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         dto.checkParam();
         Page<WmMaterial> page = new Page<>(dto.getPage(), dto.getSize());
         QueryWrapper<WmMaterial> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(WmMaterial::getIsCollection,dto.getIsCollection());
+        queryWrapper.lambda().
+                eq(dto.getIsCollection()!=0,WmMaterial::getIsCollection,dto.getIsCollection());
         wmMaterialMapper.selectPage
                 (page, queryWrapper);
         PageResponseResult result = new PageResponseResult(dto.getPage(), dto.getSize(), (int) page.getTotal());
         result.setData(page.getRecords());
         return result;
+    }
+
+    /**
+     * 更新素材收藏状态
+     * @param materialId
+     * @return
+     */
+    @Override
+    public ResponseResult collect(Integer materialId) {
+        if(materialId == null){
+            throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        boolean update = lambdaUpdate().setSql("is_collection = 1")
+                .eq(WmMaterial::getId, materialId).update();
+        return update==true?
+                ResponseResult.okResult(AppHttpCodeEnum.SUCCESS):
+                ResponseResult.errorResult(AppHttpCodeEnum.UPDATE_MATERIAL_COLLECTION_ERROR);
+    }
+
+    /**
+     * 取消素材收藏状态
+     * @param materialId
+     * @return
+     */
+    @Override
+    public ResponseResult cancelCollect(Integer materialId) {
+        if(materialId == null){
+            throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        boolean update = lambdaUpdate().setSql("is_collection = 0")
+                .eq(WmMaterial::getId, materialId).update();
+        return update==true?
+                ResponseResult.okResult(AppHttpCodeEnum.SUCCESS):
+                ResponseResult.errorResult(AppHttpCodeEnum.UPDATE_MATERIAL_COLLECTION_ERROR);
+    }
+
+    @Override
+    public ResponseResult deleteByMaterialId(Integer materialId) {
+        if(materialId == null){
+            throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //判断该图文素材是否被引用
+        if(wmNewsMaterialMapper.selectIdByMaterialId(materialId) != null){
+            throw new CustomException(AppHttpCodeEnum.DELETE_PICTURE_MATERIAL_ERROR);
+        }
+        wmMaterialMapper.deleteById(materialId);
+        return ResponseResult.okResult(200, "删除成功");
     }
 }

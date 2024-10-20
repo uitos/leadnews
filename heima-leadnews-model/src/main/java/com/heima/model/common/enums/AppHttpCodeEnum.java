@@ -24,6 +24,11 @@ public enum AppHttpCodeEnum {
     PARAM_IMAGE_FORMAT_ERROR(502,"图片格式有误"),
     SERVER_ERROR(503,"服务器内部错误"),
     PARAM_IMAGE_ERROR(504,"图片上传失败"),
+    UPDATE_MATERIAL_COLLECTION_ERROR(505,"收藏素材失败"),
+    DELETE_PICTURE_MATERIAL_ERROR(506,"该图片素材还在使用中,删除失败"),
+    DOWN_OR_UP_CONTENTS_ERROR(507,"内容下架失败"),
+    DELETE_CONTENTS_ERROR(508,"文章信息删除失败"),
+
     // 数据错误 1000~2000
     DATA_EXIST(1000,"数据已经存在"),
     AP_USER_DATA_NOT_EXIST(1001,"ApUser数据不存在"),
