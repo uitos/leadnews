@@ -33,7 +33,7 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
     private ApArticleMapper apArticleMapper;
 
     @Override
-    public ResponseResult load(ArticleHomeDto dto) {
+    public ResponseResult load(ArticleHomeDto dto,Short type) {
         //1、参数校验
         if (Objects.isNull(dto)) {
             throw new CustomException(AppHttpCodeEnum.PARAM_INVALID);
@@ -52,7 +52,7 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
            dto.setMinBehotTime(new Date());
        }
         //2、查询文章列表
-       List<ApArticle> list = apArticleMapper.load(dto);
+       List<ApArticle> list = apArticleMapper.selectListByArticleHomeDto(dto,type);
         //3、封装返回结果
         return ResponseResult.okResult(list);
 

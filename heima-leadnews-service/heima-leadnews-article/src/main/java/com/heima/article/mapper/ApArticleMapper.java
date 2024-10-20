@@ -20,18 +20,11 @@ import java.util.List;
 public interface ApArticleMapper extends BaseMapper<ApArticle> {
 
     /**
-     * 查询文章
-     * @param dto
-     * @return
-     */
-    List<ApArticle> selectList(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
-
-    /**
      * 加载文章列表
      * @param dto 封装参数
-     * @return 文
+     * @return 文章集合
      */
-    List<ApArticle> load(@Param("dto") ArticleHomeDto dto);
+    List<ApArticle> selectListByArticleHomeDto(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
 
 
 

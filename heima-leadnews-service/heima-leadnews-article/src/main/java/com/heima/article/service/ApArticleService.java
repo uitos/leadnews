@@ -21,5 +21,5 @@ public interface ApArticleService extends IService<ApArticle> {
      * @param dto 文章列表参数
      * @return 文章列表
      */
-    ResponseResult load(ArticleHomeDto dto);
+    ResponseResult load(ArticleHomeDto dto,Short type);
 }

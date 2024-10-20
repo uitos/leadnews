@@ -14,8 +14,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 网关鉴权
+ *
  * @author ghy
  * @version 1.0.1
  * @date 2024-07-03 16:02:38
@@ -27,6 +30,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
     public static final String LOGIN_PATH = "/login";
 
     @Override
+
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.warn("AppGateway AuthorizeFilter running -----");
         // 1.放行登录请求
@@ -38,6 +42,8 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
 //            log.warn("是登录请求，放行");
             return chain.filter(exchange);
         }
+
+
 //        //释放跨域测试请求
 //        if (path.contains("/ajax")) {
 //            log.warn("是跨域测试请求，放行");
@@ -47,28 +53,28 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
         // 2.判断token是否有效
         boolean flag = true;
         String token = request.getHeaders().getFirst("token");
-        if(StringUtils.isBlank(token)) {
+        if (StringUtils.isBlank(token)) {
             flag = false;
         }
         Claims claims = null;
         try {
             claims = AppJwtUtil.getClaimsBody(token);
             int result = AppJwtUtil.verifyToken(claims);
-            if(result == 1 || result == 2) {
+            if (result == 1 || result == 2) {
                 flag = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
             flag = false;
         }
-        if(flag) {
-            if(claims != null) {
+        if (flag) {
+            if (claims != null) {
                 // 3.有效：放行
                 Object id = claims.get("id");
                 log.warn("token正确，用户ID:{}", id);
                 exchange.mutate()
-                    .request(builder -> builder.header("appUserId", id.toString()))
-                    .build();
+                        .request(builder -> builder.header("appUserId", id.toString()))
+                        .build();
             }
             return chain.filter(exchange);
         } else {

@@ -1,6 +1,7 @@
 package com.heima.article.controller.v1;
 
 import com.heima.article.service.ApArticleService;
+import com.heima.common.constants.ArticleConstants;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.common.dtos.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,19 @@ public class ApArticleController {
     @PostMapping("/load")
     public ResponseResult load(@RequestBody ArticleHomeDto dto) {
         log.info("加载文章列表参数dto:{}", dto);
-        return apArticleService.load(dto);
+        return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_NEW);
+    }
+
+    @PostMapping("/load")
+    public ResponseResult loadNew(@RequestBody ArticleHomeDto dto) {
+        log.info("加载文章列表参数dto:{}", dto);
+        return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_NEW);
+    }
+
+    @PostMapping("/load")
+    public ResponseResult loadMore(@RequestBody ArticleHomeDto dto) {
+        log.info("加载文章列表参数dto:{}", dto);
+        return apArticleService.load(dto,ArticleConstants.LOADTYPE_LOAD_NEW);
     }
 
 }

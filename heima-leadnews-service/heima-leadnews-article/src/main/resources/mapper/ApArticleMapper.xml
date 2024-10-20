@@ -69,68 +69,31 @@
         title, author_id, author_name, channel_id, channel_name, layout, flag, images, labels, likes, collection, comment, views, province_id, city_id, county_id, created_time, publish_time, sync_status, origin, static_url
     </sql>
 
-    <select id="selectList" resultMap="ArticleResultMap">
-        SELECT
-        aa.id aa_id,
-        <include refid="Base_Column_List_NO_ID"></include>
-        FROM
-        ap_article aa, ap_article_config aac
-        <where>
-            aa.id = aac.article_id
-            <if test="dto.tag != '__all__'">
-                AND aa.channel_id = #{dto.tag}
-            </if>
-            <if test="type == 1">
-                <![CDATA[
-                AND aa.publish_time < #{dto.minBehotTime}
-              ]]>
-            </if>
-            <if test="type == 2">
-                <![CDATA[
-                AND aa.publish_time > #{dto.maxBehotTime}
-              ]]>
-            </if>
-            AND aac.is_down != 1
-            AND aac.is_delete != 1
-        </where>
-        ORDER BY aa.publish_time DESC
-        LIMIT #{dto.size}
-    </select>
-    <select id="load" resultType="com.heima.model.article.pojos.ApArticle">
-            SELECT aa.id,
-                   aa.title,
-                   aa.author_id,
-                   aa.author_name,
-                   aa.channel_id,
-                   aa.channel_name,
-                   aa.layout,
-                   aa.flag,
-                   aa.images,
-                   aa.labels,
-                   aa.likes,
-                   aa.collection,
-                   aa.comment,
-                   aa.views,
-                   aa.province_id,
-                   aa.city_id,
-                   aa.county_id,
-                   aa.created_time,
-                   aa.publish_time,
-                   aa.sync_status,
-                   aa.origin,
-                   aa.static_url
-            FROM ap_article aa
-                     JOIN ap_article_config aac ON aa.id = aac.article_id
-            WHERE aac.is_delete = 0
-              AND aac.is_down = 0
-            <if test="dto.tag != '__all__'">
-                and aa.channel_id = #{dto.tag}
-            </if>
-            ORDER BY aa.publish_time DESC
-            Limit #{dto.size}
+
+     <select id="selectListByArticleHomeDto" resultType="com.heima.model.article.pojos.ApArticle">
+         SELECT
+         *
+         FROM ap_article aa
+         JOIN ap_article_config aac ON aa.id = aac.article_id
+         WHERE aac.is_down = 0
+         AND aac.is_delete = 0
+         <if test="dto.tag != '__all__'">
+             AND channel_id = #{dto.tag}
+         </if>
+         <if test="type == 1">
+             <![CDATA[
+           AND publish_time < #{dto.minBehotTime}
+         ]]>
+         </if>         <if test="type == 2">
+             <![CDATA[
+           AND publish_time < #{dto.maxBehotTime}
+         ]]>
+         </if>
+         ORDER BY aa.publish_time DESC
+         LIMIT #{dto.size}
 
 
-    </select>
+     </select>
 
 
 </mapper>
