@@ -18,11 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Objects;
 
-/**
- * @author ghy
- * @version 1.0.1
- * @date 2024-10-20 18:07:34
- */
+
 @Service
 @Slf4j
 public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> implements WmNewsService {

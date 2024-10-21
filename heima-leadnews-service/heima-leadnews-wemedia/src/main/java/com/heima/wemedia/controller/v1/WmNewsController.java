@@ -12,11 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author ghy
- * @version 1.0.1
- * @date 2024-10-20 18:08:20
- */
+
 @RestController
 @RequestMapping("/api/v1/news")
 @Slf4j
