@@ -26,6 +26,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
@@ -79,6 +80,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
      * @return 发布结果
      */
     @Override
+    @Transactional
     public ResponseResult submit(WmNewsDto dto) {
         // 校验参数
         if (Objects.isNull(UserContext.getId())) {
@@ -96,7 +98,17 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
         //2.创建文章
         WmNews wmNews = createWnMews(dto);
-        saveOrUpdate(wmNews);
+        boolean flag = saveOrUpdate(wmNews);
+        if (!flag) {
+            throw new CustomException(AppHttpCodeEnum.SAVE_ERROR);
+        }
+
+        if (!Objects.isNull(dto.getStatus()) && dto.getStatus() == 0){
+            //草稿状态下不生成文章内容图片与素材关系
+            return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+        }
+
+        //状态 提交为1  草稿为0
         if (dto.getStatus().equals(WmNews.Status.NORMAL.getCode())) {
             return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
         }
@@ -109,17 +121,18 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
         saveRelations(dto.getImages(), wmNews.getId(), WemediaConstants.WM_COVER_REFERENCE);
 
-        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);}
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
 
     private void saveRelations(List<String> images, Integer wmNewId, Short type) {
         if (CollectionUtils.isNotEmpty(images)) {
             List<WmMaterial> wmMaterials = wmMaterialMapper.selectList(Wrappers.<WmMaterial>lambdaQuery()
                     .in(WmMaterial::getUrl, images));
             List<Integer> imageIds = wmMaterials.stream().map(WmMaterial::getId).collect(Collectors.toList());
-            if (imageIds.size() != images.size()){
+            if (imageIds.size() != images.size()) {
                 throw new CustomException(AppHttpCodeEnum.MATERIAL_REFERENCE_FAIL);
             }
-        wmNewsMaterialMapper.saveRelations(imageIds,wmNewId,type);
+            wmNewsMaterialMapper.saveRelations(imageIds, wmNewId, type);
         }
     }
 
@@ -143,23 +156,24 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
     private WmNews createWnMews(WmNewsDto dto) {
         WmNews wmNews = new WmNews();
         BeanUtils.copyProperties(dto, wmNews);
-        wmNews.setUserId(WmThreadLocalUtil.getUserId());
+        //获取当前线程的用户id
+        wmNews.setUserId(UserContext.getId().intValue());
         wmNews.setCreatedTime(new Date());
         wmNews.setSubmitedTime(new Date());
         List<String> images = dto.getImages();
-if (dto.getType().equals(WemediaConstants.WM_NEWS_TYPE_AUTO)){
-    if (images==null || images.size() ==WemediaConstants.WM_NEWS_NONE_IMAGE){
-        wmNews.setType(WemediaConstants.WM_NEWS_NONE_IMAGE);
-    }else if (images.size() >= WemediaConstants.WM_NEWS_MANY_IMAGE){
-        wmNews.setType(WemediaConstants.WM_NEWS_MANY_IMAGE);
-    }else {
-        wmNews.setType(WemediaConstants.WM_NEWS_SINGLE_IMAGE);
-        images = images.stream().limit(1).collect(Collectors.toList());
-    }
-    //自动处理封面
-    dto.setImages(images);
-}
-       wmNews.setImages(StringUtils.join(images, ","));
+        if (dto.getType().equals(WemediaConstants.WM_NEWS_TYPE_AUTO)) {
+            if (images == null || images.size() == WemediaConstants.WM_NEWS_NONE_IMAGE) {
+                wmNews.setType(WemediaConstants.WM_NEWS_NONE_IMAGE);
+            } else if (images.size() >= WemediaConstants.WM_NEWS_MANY_IMAGE) {
+                wmNews.setType(WemediaConstants.WM_NEWS_MANY_IMAGE);
+            } else {
+                wmNews.setType(WemediaConstants.WM_NEWS_SINGLE_IMAGE);
+                images = images.stream().limit(1).collect(Collectors.toList());
+            }
+            //自动处理封面
+            dto.setImages(images);
+        }
+        wmNews.setImages(StringUtils.join(images, ","));
         return wmNews;
     }
 
