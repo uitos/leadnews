@@ -1,6 +1,7 @@
 package com.heima.wemedia.controller.v1;
 
 import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.wemedia.dtos.WmNewsDto;
 import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.wemedia.service.WmNewsService;
 import com.heima.wemedia.service.impl.WmNewsServiceImpl;
@@ -35,5 +36,10 @@ public class WmNewsController {
     public ResponseResult one(@PathVariable Integer id) {
         return ResponseResult.okResult(wmNewsServiceImpl.getById(id));
 
+    }
+
+    @PostMapping("/submit")
+    public ResponseResult submit(@RequestBody WmNewsDto dto){
+        return wmNewsService.submit(dto);
     }
 }
