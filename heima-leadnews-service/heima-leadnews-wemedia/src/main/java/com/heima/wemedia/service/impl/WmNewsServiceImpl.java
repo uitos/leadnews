@@ -145,14 +145,14 @@ public class WmNewsServiceImpl  extends ServiceImpl<WmNewsMapper, WmNews> implem
             images = getImageUrlsFromContent(dto.getContent());  //从内容中提取的图片集合一定不是null
             if(images.size() >= WemediaConstants.WM_NEWS_MANY_IMAGE) {
                 //当图片 >=3，选择3图。选择前3张作为封面图片
-                images = images.stream().limit(3).collect(Collectors.toList());
+                images = images.stream().limit(WemediaConstants.WM_NEWS_MANY_IMAGE).collect(Collectors.toList());
                 wmNews.setType(WemediaConstants.WM_NEWS_MANY_IMAGE);
             } else if(images.size() == WemediaConstants.WM_NEWS_NONE_IMAGE){
                 //当图片 ==0，选择无图
                 wmNews.setType(WemediaConstants.WM_NEWS_NONE_IMAGE);
             } else {
                 //否则，选择单图，选择第1张作为封面图片
-                images = images.stream().limit(1).collect(Collectors.toList());
+                images = images.stream().limit(WemediaConstants.WM_NEWS_SINGLE_IMAGE).collect(Collectors.toList());
                 wmNews.setType(WemediaConstants.WM_NEWS_SINGLE_IMAGE);
             }
             //布局选择自动，需要把内容中的图片设置成封面图片
