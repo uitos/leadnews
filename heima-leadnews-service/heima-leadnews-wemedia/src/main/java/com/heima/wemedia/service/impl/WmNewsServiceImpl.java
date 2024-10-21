@@ -91,6 +91,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
                 imagesList = contentDtos.stream()
                         .filter(item -> Objects.equals(item.getType(), WemediaConstants.WM_NEWS_TYPE_IMAGE))
                         .map(ContentDto::getValue)
+                        .limit(3)
                         .collect(Collectors.toList());
                 dto.setImages(imagesList);
                 //如果封面类型为自动，传入的type是-1，需要手动矫正
