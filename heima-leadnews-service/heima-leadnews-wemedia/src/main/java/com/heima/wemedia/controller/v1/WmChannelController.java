@@ -16,7 +16,7 @@ public class WmChannelController {
     @Autowired
     private WmChannelService wmChannelService;
 
-    @GetMapping("/channel")
+    @GetMapping("/channels")
     public ResponseResult channels() {
         log.warn("查询所有频道");
         return wmChannelService.listQuery();
