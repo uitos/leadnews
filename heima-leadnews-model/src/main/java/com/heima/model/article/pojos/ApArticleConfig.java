@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 @Data
 @TableName("ap_article_config")
-public class ApArticleConfig implements Serializable {
+public class    ApArticleConfig implements Serializable {
 
     @TableId(value = "id",type = IdType.ASSIGN_ID)
     private Long id;
@@ -60,4 +60,12 @@ public class ApArticleConfig implements Serializable {
      */
     @TableField("is_delete")
     private Boolean isDelete;
+
+    public ApArticleConfig(Long articleId) {
+        this.articleId = articleId;
+        this.isComment = true;
+        this.isForward = true;
+        this.isDown = false;
+        this.isDelete = false;
+    }
 }

@@ -1,4 +1,4 @@
-package com.heima.app.gateway.utils;
+package com.heima.apis.article.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;

@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
 @TableName("ap_article_content")
+@NoArgsConstructor
 public class ApArticleContent implements Serializable {
 
     @TableId(value = "id",type = IdType.ASSIGN_ID)
@@ -25,4 +27,9 @@ public class ApArticleContent implements Serializable {
      * 文章内容
      */
     private String content;
+
+    public ApArticleContent(Long articleId, String content) {
+        this.articleId = articleId;
+        this.content = content;
+    }
 }

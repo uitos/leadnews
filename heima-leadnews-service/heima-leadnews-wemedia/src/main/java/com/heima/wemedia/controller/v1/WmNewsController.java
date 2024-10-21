@@ -2,6 +2,7 @@ package com.heima.wemedia.controller.v1;
 
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.dtos.WmMaterialDto;
+import com.heima.model.wemedia.dtos.WmNewsDto;
 import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.wemedia.service.WmChannelService;
 import com.heima.wemedia.service.WmNewsService;
@@ -23,6 +24,17 @@ public class WmNewsController {
     public ResponseResult list(@RequestBody WmNewsPageReqDto dto){
         return wmNewsService.pageQuery(dto);
 
+    }
+
+    @PostMapping("submit")
+    public ResponseResult submit(@RequestBody WmNewsDto dto){
+        return wmNewsService.submit(dto);
+
+    }
+
+    @GetMapping("/one/{id}")
+    public ResponseResult one(@PathVariable Integer id){
+        return ResponseResult.okResult(wmNewsService.getById(id));
     }
 
 
