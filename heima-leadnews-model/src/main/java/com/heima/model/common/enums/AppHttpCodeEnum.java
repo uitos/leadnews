@@ -11,6 +11,11 @@ public enum AppHttpCodeEnum {
     NEED_LOGIN(1,"需要登录后操作"),
     LOGIN_PASSWORD_ERROR(2,"密码错误"),
     PHONE_OR_PASSWORD_ERROR(3,"手机号或密码错误"),
+
+    //业务异常
+    SAVE_ERROR(11, "保存失败"),
+    UPDATE_ERROR(12, "更新失败"),
+
     // TOKEN50~100
     TOKEN_INVALID(50,"无效的TOKEN"),
     TOKEN_EXPIRE(51,"TOKEN已过期"),
