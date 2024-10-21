@@ -34,6 +34,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         if (Objects.isNull(wmUserId)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
         }
+        dto.checkParam();
         Short status = dto.getStatus();
         String keyword = dto.getKeyword();
         Integer channelId = dto.getChannelId();

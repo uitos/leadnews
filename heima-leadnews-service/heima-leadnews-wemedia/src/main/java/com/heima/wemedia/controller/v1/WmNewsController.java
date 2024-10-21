@@ -5,10 +5,7 @@ import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.wemedia.service.WmNewsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @ClassName WmNewsController
@@ -25,7 +22,7 @@ public class WmNewsController {
     @Autowired
     private WmNewsService wmNewsService;
 
-    @PutMapping("/list")
+    @PostMapping("/list")
     public ResponseResult list(WmNewsPageReqDto dto) {
         log.info("查询文章列表:{}", dto);
         return wmNewsService.pageQuery(dto);
