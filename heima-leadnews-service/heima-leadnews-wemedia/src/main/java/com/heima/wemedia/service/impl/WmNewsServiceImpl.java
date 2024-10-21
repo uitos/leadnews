@@ -29,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
     public ResponseResult pageQuery(WmNewsPageReqDto dto) {
         Long wmUserId = UserContext.getId();
         if (Objects.isNull(wmUserId)) {
-            return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+            throw new CustomException(AppHttpCodeEnum.NEED_LOGIN);
         }
         dto.checkParam();
         Short status = dto.getStatus();
@@ -66,7 +67,6 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         Date end = dto.getEndPubDate();
         Page<WmNews> page = new Page<>(dto.getPage(), dto.getSize());
         lambdaQuery().eq(WmNews::getUserId, wmUserId)
-                .eq(Objects.nonNull(status), WmNews::getStatus, status)
                 .eq(!Objects.isNull(status), WmNews::getStatus, status)
                 .like(StringUtils.isNotBlank(keyword), WmNews::getTitle, keyword)
                 .eq(!Objects.isNull(channelId), WmNews::getChannelId, channelId)
@@ -79,6 +79,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
     }
 
     @Override
+    @Transactional
     public ResponseResult submit(WmNewsDto dto) {
         Long wmUserId = UserContext.getId();
         if (Objects.isNull(wmUserId)) {
