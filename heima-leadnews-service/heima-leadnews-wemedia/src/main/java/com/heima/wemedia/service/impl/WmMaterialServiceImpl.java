@@ -48,9 +48,9 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         }
 
         //上传
-        String name = multipartFile.getName();
-        //String affix = name.substring(name.lastIndexOf("."));
-        String fileName = UUID.randomUUID().toString().replace("-", "");
+        String name = multipartFile.getOriginalFilename();
+        String affix = name.substring(name.lastIndexOf("."));
+        String fileName = UUID.randomUUID().toString().replace("-", "")+affix;
         String path = fileStorageService.uploadImgFile("", fileName, multipartFile.getInputStream());
 
         //更新到DB
