@@ -60,6 +60,7 @@
 年龄：${stuMap.stu2.age}<br/>
 
 <br/>
+
 <a href="###">遍历map中两个学生信息：</a><br/>
 <table>
     <tr>
@@ -81,6 +82,7 @@
         </tr>
     </#list>
 </table>
+
 <hr>
     <#if (date1?date >= date2?date)>
         条件成立
@@ -100,6 +102,10 @@
 <hr/>
 ${name ! ''}  <br>
 ${name2 ! 'name2不存在，给一个默认值'}
+
+<#if (age>20)>
+    年龄大于20
+</#if>
 
 </body>
 </html>

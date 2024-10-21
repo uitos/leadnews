@@ -75,6 +75,8 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             // 4.无效：拦截
             response.setRawStatusCode(HttpStatus.UNAUTHORIZED.value());
             return response.setComplete();
+
+
         }
     }
 
