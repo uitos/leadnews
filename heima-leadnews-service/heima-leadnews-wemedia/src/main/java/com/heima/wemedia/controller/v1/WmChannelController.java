@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @ClassName WmChannelController
- * @Description TODO(描述该类的功能)
+ * @Description 频道相关接口
  * @Author Zhu Rui
  * @Date 2024/10/20
  * @Version 1.0
